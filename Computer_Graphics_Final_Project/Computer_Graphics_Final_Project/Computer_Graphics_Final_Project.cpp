@@ -11,13 +11,13 @@
 //#include<gl/glm/glm/ext.hpp>
 //#include<gl/glm/glm/gtc/matrix_transform.hpp>
 //#include<gl/glm/glm/gtc/type_ptr.hpp>
-#include <gl/glew.h>
-#include <gl/freeglut.h>
-#include <gl/freeglut_ext.h>
-#include <gl/freeglut_std.h>
-#include <glm/glm.hpp>
-#include <glm/ext.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glew.h"
+#include "freeglut.h"
+#include "freeglut_ext.h"
+#include "freeglut_std.h"
+#include "glm.hpp"
+#include "ext.hpp"
+#include "gtc/matrix_transform.hpp"
 #define WIDTH 1500
 #define HEIGHT 900
 #define PI 3.141592
