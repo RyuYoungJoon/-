@@ -49,12 +49,12 @@ uniform_real_distribution<> random_pos_urd{ -20.0,20.0 };
 float random_xpos = random_pos_urd(dre);
 float random_zpos = random_pos_urd(dre);
 
-float Camera_xPos = 250.0f;
-float Camera_yPos = 10.0f;
-float Camera_zPos = 100.0f;
+float Camera_xPos = 0.0f;
+float Camera_yPos = -40.0f;
+float Camera_zPos = 0.0f;
 
-float Camera_xAT = 250.0f;
-float Camera_yAT = 0.0f;
+float Camera_xAT = 0.0f;
+float Camera_yAT = -40.0f;
 float Camera_zAT = 0.0f;
 
 float Open_Ground = 0.0f;
@@ -72,6 +72,16 @@ float light_b = 1.0;
 float camera_rt = 0.0f;
 
 bool Open_mode = true;
+bool Down_node = true;
+
+
+float rad = 30.0f;
+float degree = 0.0f;
+float x_pos = 360.0f;
+float z_pos = 0.0f;
+
+float Down_Wheel = 0.0f;
+float Down_Wheel2 = 0.0f;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -81,6 +91,7 @@ glm::vec3 White = glm::vec3(1.0f, 1.0f, 1.0f);
 glm::vec3 Black = glm::vec3(0.0f, 0.0f, 0.0f);
 glm::vec3 Yellow = glm::vec3(1.0f, 1.0f, 0.0f);
 glm::vec3 Brown = glm::vec3(0.58f, 0.29f, 0.0f);
+glm::vec3 Gold = glm::vec3(0.6f, 0.6f, 0.0f);
 
 glm::mat4 S = glm::mat4(1.0f);
 glm::mat4 T = glm::mat4(1.0f);
@@ -96,7 +107,6 @@ struct figure
 };
 
 figure circle[36];
-
 
 GLuint vao[10], vbo[10];
 
@@ -265,18 +275,19 @@ GLvoid drawScene()
 
     qobj = gluNewQuadric();
 
-
-
+    Camera_xPos = x_pos + glm::cos(glm::radians(float(degree * 10))) * rad;
+    Camera_zPos = z_pos + glm::sin(glm::radians(float(degree * 10))) * rad;
+    Camera_xAT = x_pos;
+    Camera_zAT = z_pos;
     glm::mat4 LIGHT = glm::mat4(1.0f);
 
-    glm::mat4 CAMERA_ROTATE = glm::rotate(glm::mat4(1.0f), float(glm::radians(camera_rt)), glm::vec3(0.0, 1.0, 0.0));
-
+    //glm::mat4 CAMERA_ROTATE = glm::rotate(glm::mat4(1.0f), float(glm::radians(camera_rt)), glm::vec3(0.0, 1.0, 0.0));
     glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
     glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
     glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
-    glm::mat4 view = glm::mat4(1.0f);
-
-    view = glm::lookAt(camerapos, cameradirection, cameraup)* CAMERA_ROTATE;
+    
+    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
+    
     GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
     glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
 
@@ -424,9 +435,6 @@ void InitBuffer()
     glEnableVertexAttribArray(1);*/
 }
 
-
-
-
 void InitShader()
 {
     make_vertexshader();
@@ -452,11 +460,11 @@ void Keyboard(unsigned char key, int x, int y)
     switch (key)
     {
     case 'x':
-        Camera_xPos -= 2.f;
+        x_pos -= 2.0f;
         Camera_xAT -= 2.0f;
         break;
     case 'X':
-        Camera_xPos += 2.0f;
+        x_pos += 2.0f;
         Camera_xAT += 2.0f;
         break;
     case 'y':
@@ -468,18 +476,18 @@ void Keyboard(unsigned char key, int x, int y)
         Camera_yAT += 2.0f;
         break;
     case 'z':
-        Camera_zPos -= 2.0f;
+        z_pos -= 2.0f;
         Camera_zAT -= 2.0f;
         break;
     case 'Z':
-        Camera_zPos += 2.0f;
+        z_pos += 2.0f;
         Camera_zAT += 2.0f;
         break;
     case 'r':
-        camera_rt += 5.0f;
+        degree += 2.0;
         break;
     case 'R':
-        camera_rt -= 5.0f;
+        degree -= 2.0;
         break;
     }
 }
@@ -502,199 +510,333 @@ void Timerfunction(int value)
     // ≈È¥œπŸƒ˚ »∏¿¸
     Wheel_R += 2.0f;
 
+    Down_Wheel += 0.4f;
+    if (Down_Wheel >= 40.0f)
+        Down_Wheel = 0.0f;
 
+    Down_Wheel2 += 0.5f;
+    if (Down_Wheel2 >= 60.0f)
+        Down_Wheel2 = 0.0f;
     glutTimerFunc(10, Timerfunction, 1);
 }
 
 GLvoid DrawMap()
 {
-   
- // ≈È¥œπŸƒ˚
- S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 2.0));
- Rz = glm::rotate(glm::mat4(1.0f), glm::radians(Wheel_R), glm::vec3(0.0f, 0.0f, 1.0f));
- unsigned int Wheel = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(Rz*S));
- unsigned int Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(Wheel_Color, Gray.r, Gray.g, Gray.b);
+    // ∞Ê∑Œ
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 0.5, 5.0));
+    unsigned int path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(S));
+    unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[2]);
- glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- // ∞Ê∑Œ
- S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 0.5, 5.0));
- unsigned int path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(S));
- unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 5.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 5.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(65.0, 10.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(65.0, 10.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0, 7.5, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0, 7.5, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(24.0, 0.5, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(110.0, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- //≈È¥œ
- S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0));
- Rz = glm::rotate(glm::mat4(1.0f), glm::radians(Wheel_R), glm::vec3(0.0f, 0.0f, 1.0f));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(120.0f, 0.0f, 0.0f));
- Wheel = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T*Rz*S));
- Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(Wheel_Color, Gray.r, Gray.g, Gray.b);
+    Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(90.0)), glm::vec3(0.0, 1.0, 0.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(130.0, 0.0, 19.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Ry * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[2]);
- glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
- S = glm::scale(glm::mat4(1.0f), glm::vec3(24.0, 0.5, 5.0));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(110.0, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(150.0, 0.0, 38.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(90.0)), glm::vec3(0.0, 1.0, 0.0));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(130.0, 0.0, 19.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Ry * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(170.0, 0.0, 19.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(150.0, 0.0, 38.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(190.0, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(170.0, 0.0, 19.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(210.0, 0.0, -19.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(190.0, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(230.0, 0.0, -38.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(210.0, 0.0, -19.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(250.0, 0.0, -19.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(230.0, 0.0, -38.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(270.0, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(250.0, 0.0, -19.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Ry* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(295.0 - Open_Ground, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(270.0, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
- S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(295.0 - Open_Ground, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
 
- T = glm::translate(glm::mat4(1.0f), glm::vec3(315.0 + Open_Ground, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(315.0 + Open_Ground, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- S = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 0.5f, 5.0f));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(335.0, 0.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 0.5f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(335.0, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
- Rz = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
- T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0, -19.0, 0.0));
- path = glGetUniformLocation(s_program[0], "Transform");
- glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* Rz * S));
- path_Color = glGetUniformLocation(s_program[1], "in_Color");
- glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 20.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0, -20.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
- glBindVertexArray(vao[0]);
- glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
- 
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(350.0f, -40.0f, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(335.0f - Open_Ground, -40, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 0.5f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, -40, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(270.0f, -50.0f, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(250.0f, -60.0f, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(20.0f, 0.5f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(220.0f, -50.0f, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // Ω«∏∞¥ı
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0, 0.0, -5.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    gluCylinder(qobj, 0.5, 0.5, 10.0, 20, 20);
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0, -40.0, -5.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Red.r, Red.g, Red.b);
+    gluCylinder(qobj, 0.5, 0.5, 10.0, 20, 20);
+
+
+    // ≈È¥œ
+    
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 2.0));
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(Wheel_R), glm::vec3(0.0f, 0.0f, 1.0f));
+    unsigned int Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(Rz* S));
+    unsigned int Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0));
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(Wheel_R), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(120.0f, 0.0f, 0.0f));
+    Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T* Rz* S));
+    Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0, 1.0, 1.0));
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(Wheel_R), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0f, -10.0f, 0.0f));
+    Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T* Rz* S));
+    Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(355.0f, -25.0f, 0.0f));
+    Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T* Rz* S));
+    Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f, 0.5f, 0.5f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(278.0f, -70.0f + Down_Wheel, 0.0f));
+    Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T* Rz* S));
+    Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(260.0f, -90.0f + Down_Wheel2, 0.0f));
+    Wheel = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(Wheel, 1, GL_FALSE, glm::value_ptr(T* Rz* S));
+    Wheel_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(Wheel_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
 }
 
 GLvoid DrawPlayer()
 {
 
+}
+
+void make_circle()
+{
+    float r = 30.0;
+
+    for (int i = 0; i < 36; ++i)
+    {
+        circle[i].x = glm::cos(glm::radians(float(i * 10))) * r;
+        circle[i].z = rad + glm::sin(glm::radians(float(i * 10))) * r;
+    }
 }
