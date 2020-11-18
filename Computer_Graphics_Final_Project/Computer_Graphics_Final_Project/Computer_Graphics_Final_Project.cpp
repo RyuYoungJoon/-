@@ -34,7 +34,10 @@ void make_fragmentshader();
 void InitShader();
 void InitBuffer();
 void Keyboard(unsigned char, int, int);
+void SpecialKeyboard_down(int, int, int);
+void SpecialKeyboard_up(int, int, int);
 void Timerfunction(int);
+void Mouse(int button, int state, int x, int y);
 GLvoid DrawMap();
 GLvoid DrawPlayer();
 GLchar* vertexsource, * fragmentsource;
@@ -50,11 +53,11 @@ float random_xpos = random_pos_urd(dre);
 float random_zpos = random_pos_urd(dre);
 
 float Camera_xPos = 0.0f;
-float Camera_yPos = -40.0f;
+float Camera_yPos = 15.0f;
 float Camera_zPos = 0.0f;
 
 float Camera_xAT = 0.0f;
-float Camera_yAT = -40.0f;
+float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
 float Open_Ground = 0.0f;
@@ -74,14 +77,34 @@ float camera_rt = 0.0f;
 bool Open_mode = true;
 bool Down_node = true;
 
-
-float rad = 30.0f;
-float degree = 0.0f;
-float x_pos = 360.0f;
+float rad = 20.0f;
+float degree = 180.0f;
+float x_pos = 0.0f;
 float z_pos = 0.0f;
 
 float Down_Wheel = 0.0f;
 float Down_Wheel2 = 0.0f;
+
+// 캔 trans 좌표 변수
+float can_t_x = -10.0f;
+float can_t_y = 0.0f;
+float can_t_z = -2.5f;
+float acceleration = 1.0f;
+
+// 캔의 x, y ,z 속도 벡터
+float can_x_vec = 0.1f;
+float can_y_vec = 0.0f;
+float can_z_vec = 0.1f;
+
+// 캔의 x, y, z 회전률 
+float can_x_rt = 10.0f;
+float can_y_rt = 10.0f;
+float can_z_rt = 30.0f;
+
+float camera_acceleration = 1.0f;
+float can_rt = 0.0f;
+// 마우스 불 변수
+bool left_botton;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -258,6 +281,9 @@ void main(int argc, char** argv)
     glutDisplayFunc(drawScene);
     glutReshapeFunc(Reshape);
     glutKeyboardFunc(Keyboard);
+    glutSpecialFunc(SpecialKeyboard_down);
+    glutSpecialUpFunc(SpecialKeyboard_up);
+    glutMouseFunc(Mouse);
     glutTimerFunc(1, Timerfunction, 1);
     glutMainLoop();
 }
@@ -271,12 +297,12 @@ GLvoid drawScene()
     glUseProgram(s_program[1]);
     glUseProgram(s_program[2]);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     qobj = gluNewQuadric();
 
-    Camera_xPos = x_pos + glm::cos(glm::radians(float(degree * 10))) * rad;
-    Camera_zPos = z_pos + glm::sin(glm::radians(float(degree * 10))) * rad;
+    Camera_xPos = x_pos + glm::cos(glm::radians(float(degree))) * rad;
+    Camera_zPos = z_pos + glm::sin(glm::radians(float(degree))) * rad;
     Camera_xAT = x_pos;
     Camera_zAT = z_pos;
     glm::mat4 LIGHT = glm::mat4(1.0f);
@@ -297,6 +323,7 @@ GLvoid drawScene()
     glUniformMatrix4fv(Projectionlocation, 1, GL_FALSE, value_ptr(projection));
 
     DrawMap();
+    DrawPlayer();
  
     unsigned int light_pos = glGetUniformLocation(s_program[2], "lightPos");
     glUniform3f(light_pos, light_x, light_y, light_z);
@@ -310,9 +337,7 @@ GLvoid drawScene()
     unsigned int ambientLight_on = glGetUniformLocation(s_program[2], "ambientLight_on_off");
     glUniform3f(ambientLight_on, 0.7, 0.7, 0.7);
 
-    glutPostRedisplay();
     glutSwapBuffers();
-
 }
 
 GLvoid Reshape(int w, int h)
@@ -492,6 +517,44 @@ void Keyboard(unsigned char key, int x, int y)
     }
 }
 
+
+// 마우스로 만들까 키보드로 만들까 시발 둘다 ㅈㄴ 어려운데 ㅈ 됬음
+void SpecialKeyboard_down(int key, int x, int y)
+{
+    if (key == GLUT_KEY_UP)
+    {
+        can_t_x += can_x_vec * acceleration;
+        acceleration += 0.1f;
+
+        x_pos += can_x_vec * camera_acceleration;
+        camera_acceleration += 0.1f;
+
+        if (acceleration >= 15.0f) acceleration = 15.0f;
+        if (camera_acceleration >= 15.0f) camera_acceleration = 15.0f;
+    }
+    if (key == GLUT_KEY_RIGHT)
+    {
+        if (can_rt == -90.0f)  degree = -90.0f, can_z_rt = 0.0;
+        //degree += 10.0f;
+        can_rt -= can_z_rt;
+
+        can_t_z += can_z_vec * acceleration;
+        acceleration += 0.1f;
+
+        z_pos += can_z_vec * camera_acceleration;
+        camera_acceleration += 0.1f;
+
+        if (acceleration >= 15.0f) acceleration = 15.0f;
+        if (camera_acceleration >= 15.0f) camera_acceleration = 15.0f;
+    }
+}
+
+
+void SpecialKeyboard_up(int key, int x, int y)
+{
+
+ }
+
 void Timerfunction(int value)
 {
     // 장애물 땅 열리기
@@ -517,7 +580,18 @@ void Timerfunction(int value)
     Down_Wheel2 += 0.5f;
     if (Down_Wheel2 >= 60.0f)
         Down_Wheel2 = 0.0f;
+
+    //can_t_x += 0.5f;
     glutTimerFunc(10, Timerfunction, 1);
+    glutPostRedisplay();
+}
+
+void Mouse(int button, int state, int x, int y)
+{
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    {
+        can_t_x += 1.0f;
+    }
 }
 
 GLvoid DrawMap()
@@ -827,7 +901,13 @@ GLvoid DrawMap()
 
 GLvoid DrawPlayer()
 {
-
+    Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.5f , can_t_z));
+    unsigned int player = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T*Ry));
+    unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(player_Color, Red.r, Red.g, Red.b);
+    gluCylinder(qobj, 1.5, 1.5, 5.0, 20, 20);
 }
 
 void make_circle()
