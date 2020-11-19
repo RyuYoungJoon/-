@@ -52,6 +52,8 @@ uniform_real_distribution<> random_pos_urd{ -20.0,20.0 };
 float random_xpos = random_pos_urd(dre);
 float random_zpos = random_pos_urd(dre);
 
+// 유영준 맵 작업용 카메라 좌표
+/*
 float Camera_xPos = 0.0f;
 float Camera_yPos = 15.0f;
 float Camera_zPos = 0.0f;
@@ -60,6 +62,33 @@ float Camera_xAT = 0.0f;
 float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
+float x_pos = 0.0f;
+float y_pos = 0.0f;
+float z_pos = 0.0f;
+
+float degree = 90.0f;
+*/
+
+// 홍태현 실린더 움직임 작업용 카메라 좌표
+float Camera_xPos = 0.0f;
+float Camera_yPos = 15.0f;
+float Camera_zPos = 0.0f;
+
+float Camera_xAT = 0.0f;
+float Camera_yAT = 0.0f;
+float Camera_zAT = 0.0f;
+
+float x_pos = 0.0f;
+float y_pos = 0.0f;
+float z_pos = 0.0f;
+
+float cam_y_dis = 1.0f;
+
+float degree = 180.0f;
+
+float camera_rt = 0.0f;
+
+// 어떤 변수인지 적어놔줘 
 float Open_Ground = 0.0f;
 float Proj_degree = 100.0f;
 float Wheel_R = 0.0f;
@@ -72,15 +101,11 @@ float light_r = 1.0;
 float light_g = 1.0;
 float light_b = 1.0;
 
-float camera_rt = 0.0f;
 
 bool Open_mode = true;
 bool Down_node = true;
 
 float rad = 20.0f;
-float degree = 90.0f;
-float x_pos = 200.0f;
-float z_pos = 0.0f;
 
 float Down_Wheel = 0.0f;
 float Down_Wheel2 = 0.0f;
@@ -93,7 +118,7 @@ float acceleration = 1.0f;
 
 // 캔의 x, y ,z 속도 벡터
 float can_x_vec = 0.1f;
-float can_y_vec = 0.0f;
+float can_y_vec = 0.1f;
 float can_z_vec = 0.1f;
 
 // 캔의 x, y, z 회전률 
@@ -104,7 +129,7 @@ float can_z_rt = 30.0f;
 float camera_acceleration = 1.0f;
 float can_rt = 0.0f;
 // 마우스 불 변수
-bool left_botton;
+bool mouse_botton;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -302,17 +327,19 @@ GLvoid drawScene()
     qobj = gluNewQuadric();
 
     Camera_xPos = x_pos + glm::cos(glm::radians(float(degree))) * rad;
+    Camera_yPos = y_pos + 15.0f * cam_y_dis;
     Camera_zPos = z_pos + glm::sin(glm::radians(float(degree))) * rad;
     Camera_xAT = x_pos;
+    Camera_yAT = y_pos;
     Camera_zAT = z_pos;
     glm::mat4 LIGHT = glm::mat4(1.0f);
 
-    //glm::mat4 CAMERA_ROTATE = glm::rotate(glm::mat4(1.0f), float(glm::radians(camera_rt)), glm::vec3(0.0, 1.0, 0.0));
+    glm::mat4 CAMERA_ROTATE = glm::rotate(glm::mat4(1.0f), float(glm::radians(camera_rt)), glm::vec3(1.0, 0.0, 0.0));
     glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
     glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
     glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
     
-    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
+    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup) * CAMERA_ROTATE;
     
     GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
     glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
@@ -517,7 +544,6 @@ void Keyboard(unsigned char key, int x, int y)
     }
 }
 
-
 // 마우스로 만들까 키보드로 만들까 시발 둘다 ㅈㄴ 어려운데 ㅈ 됬음
 void SpecialKeyboard_down(int key, int x, int y)
 {
@@ -549,7 +575,6 @@ void SpecialKeyboard_down(int key, int x, int y)
     }
 }
 
-
 void SpecialKeyboard_up(int key, int x, int y)
 {
 
@@ -580,10 +605,52 @@ void Timerfunction(int value)
     Down_Wheel2 += 0.5f;
     if (Down_Wheel2 >= 60.0f)
         Down_Wheel2 = 0.0f;
-    //can_t_x += 0.5f;
 
-    //if (x_pos >= 20.0f && x_pos <= 21.0f)
-    //    exit(1);
+    if (mouse_botton)
+    {
+        if (can_t_x < 358.0f && can_t_y == 0.0f)
+        {
+            can_t_x += can_x_vec * acceleration;
+            acceleration += 0.01f;
+
+            x_pos += can_x_vec * camera_acceleration;
+            camera_acceleration += 0.01f;
+
+            if (acceleration >= 5.0f) acceleration = 5.0f;
+            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
+        }
+
+        if (can_t_x >= 357.0f && can_t_x <= 358.0f)
+        {
+            degree = 0.0;
+            can_t_y -= can_y_vec * acceleration;
+            acceleration += 0.01f;
+
+            y_pos -= can_y_vec * camera_acceleration;
+            camera_acceleration += 0.01f;
+
+            if (acceleration >= 5.0f) acceleration = 5.0f;
+            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
+        }
+
+        if (can_t_x <= 358.0f && can_t_y<=-43.0f)
+        {
+            y_pos = 40.0f;
+            degree = 90.0f;
+            //cam_y_dis = -1.0f;
+            camera_rt = 180.0f;
+            can_t_x -= can_x_vec * acceleration;
+            acceleration += 0.01f;
+
+            x_pos -= can_x_vec * camera_acceleration;
+            camera_acceleration += 0.01f;
+
+            if (acceleration >= 5.0f) acceleration = 5.0f;
+            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
+        }
+
+
+    }
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
@@ -592,7 +659,13 @@ void Mouse(int button, int state, int x, int y)
 {
     if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
     {
-        can_t_x += 1.0f;
+        mouse_botton = true;
+    }
+    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+    {
+        acceleration = 1.0f;
+        camera_acceleration = 1.0f;
+        mouse_botton = false;
     }
 }
 
