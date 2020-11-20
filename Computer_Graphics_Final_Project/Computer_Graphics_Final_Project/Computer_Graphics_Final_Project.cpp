@@ -133,6 +133,8 @@ float camera_acceleration = 1.0f;
 float can_rt = 0.0f;
 // 마우스 불 변수
 bool mouse_botton;
+bool jump_button;
+
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -667,6 +669,19 @@ void Timerfunction(int value)
 
 
     }
+    if (jump_button)
+    {
+        can_t_y += 0.2f;
+        if (can_t_y >= 5.0f)
+            jump_button = false;
+
+    }
+    else
+    {
+        can_t_y -= 0.2f;
+        if (can_t_y <= 0.0f)
+            can_t_y = 0;
+    }
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
@@ -682,6 +697,12 @@ void Mouse(int button, int state, int x, int y)
         acceleration = 1.0f;
         camera_acceleration = 1.0f;
         mouse_botton = false;
+    }
+    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+    {
+        jump_button = true;
+
+
     }
 }
 
