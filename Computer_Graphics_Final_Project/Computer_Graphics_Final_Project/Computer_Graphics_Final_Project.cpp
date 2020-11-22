@@ -69,7 +69,7 @@ float random_zpos = random_pos_urd(dre);
 
 // 홍태현 실린더 움직임 작업용 카메라 좌표
 float Camera_xPos = 0.0f;
-float Camera_yPos = 15.0f;
+float Camera_yPos = 0.0f;
 float Camera_zPos = 0.0f;
 
 float Camera_xAT = 0.0f;
@@ -82,7 +82,7 @@ float z_pos = 0.0f;
 
 float cam_y_dis = 1.0f;
 
-float degree = 180.0f;
+float degree = 90.0f;
 float degree_vec = 2.0f;
 
 float camera_rt = 0.0f;
@@ -117,12 +117,12 @@ float Down_Wheel6 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
 // 캔 trans 좌표 변수
 float can_t_x = -30.0f;
 float can_t_y = 0.0f;
-float can_t_z = -2.5f;
+float can_t_z = 0.0f;
 float acceleration = 1.0f;
 
 // 캔의 x, y ,z 속도 벡터
-float can_x_vec = 0.1f;
-float can_y_vec = 0.1f;
+float can_x_vec = 0.05f;
+float can_y_vec = 0.05f;
 float can_z_vec = 0.1f;
 
 // 캔의 x, y, z 회전률 
@@ -133,6 +133,7 @@ float can_z_rt = 30.0f;
 float camera_acceleration = 1.0f;
 float can_rt = 0.0f;
 
+float max_jump = 10.0f;
 float jump_y_vec = 0.2;
 
 // 마우스 불 변수
@@ -177,7 +178,7 @@ bb path_bounding_box[] =
 
 bb can_bounding_box[] =
 {
-    -32.0, 1.5, 0.0, // 좌상단 (-32.0, 1.5)
+    -32.0, 3.0, 0.0, // 좌상단 (-32.0, 1.5)
     -28.0, 0.0, 0.0, // 우하단 (-28.0, 0.0)
 };
 
@@ -350,7 +351,7 @@ GLvoid drawScene()
     qobj = gluNewQuadric();
 
     Camera_xPos = x_pos + glm::cos(glm::radians(float(degree))) * rad;
-    Camera_yPos = y_pos + 15.0f;
+    Camera_yPos = y_pos + 5.0f;
     Camera_zPos = z_pos + glm::sin(glm::radians(float(degree))) * rad;
     Camera_xAT = x_pos;
     Camera_yAT = y_pos;
@@ -672,19 +673,19 @@ void Timerfunction(int value)
             //    //cout << "충돌이 일어났습니다." << endl;
             //}
 
-            if (((44.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 56.0f) &&
-                (4.5f <= can_bounding_box[0].y && can_bounding_box[0].y <= 5.0f)) ||
-                ((44.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 56.0f) &&
-                (4.5f <= can_bounding_box[1].y && can_bounding_box[1].y <= 5.0f)))
+            if ((45.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 55.0f) ||
+                (45.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 55.0f))
                 // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
             {
-                if (can_bounding_box[0].y <= 5.5f && can_t_y <= 5.5f)
+                if (can_bounding_box[1].y <= 4.0f && can_t_y <= 4.0f)
                 {
-                    jump_y_vec *= -1;
+                    can_t_y = 4.0f;
+                    max_jump = 14.0f;
+                    cout << "계단 1에 충돌이 일어났습니다." << endl;
                 }
-                cout << "계단 1에 충돌이 일어났습니다." << endl;
             }
 
+            /*
             if (((-40.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 44.0f || 44.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= -40.0f) && 
                 (-40.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 44.0f || 44.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= -40.0f)) && 
                 ((1.2f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.3f || 1.3f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.2f) && 
@@ -695,7 +696,7 @@ void Timerfunction(int value)
                 cout << "충돌이 일어났습니다." << endl;
             }
 
-            else cout << "충돌이 안일어 났습니다" << endl;
+            else cout << "충돌이 안일어 났습니다" << endl;*/
         }
 
         if (can_t_x >= 357.0f && can_t_x <= 380.0f)
@@ -748,20 +749,20 @@ void Timerfunction(int value)
         }
 
 
-    }
-    if (jump_button)
-    {
-        can_t_y += jump_y_vec;
-
-        can_bounding_box[0].y += jump_y_vec;
-        can_bounding_box[1].y += jump_y_vec;
-
-        if (can_bounding_box[0].y >= 10.0f)
-            jump_y_vec *= -1;
-        if (can_bounding_box[0].y <= 1.2f)
+        if (jump_button)
         {
-            jump_button = false;
-            jump_y_vec *= -1;
+            can_t_y += jump_y_vec;
+
+            can_bounding_box[0].y += jump_y_vec;
+            can_bounding_box[1].y += jump_y_vec;
+
+            if (can_bounding_box[0].y >= max_jump)
+                jump_y_vec *= -1;
+            if (can_bounding_box[0].y <= 3.0f)
+            {
+                jump_button = false;
+                jump_y_vec *= -1;
+            }
         }
     }
 
@@ -794,7 +795,7 @@ void Mouse(int button, int state, int x, int y)
 GLvoid DrawMap()
 {
     // 경로
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 5.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 1.0));
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(S));
     unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
@@ -803,8 +804,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 0.5, 5.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 5.0, 0.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 1.0, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 4.0, 0.0));
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
@@ -1266,12 +1267,14 @@ GLvoid DrawMap()
 GLvoid DrawPlayer()
 {
     Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.5f, can_t_z));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 2.0f, can_t_z));
     unsigned int player = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T*Ry));
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T));
     unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(player_Color, Red.r, Red.g, Red.b);
-    gluCylinder(qobj, 1.5, 1.5, 5.0, 20, 20);
+    
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 }
 
 void make_circle()
