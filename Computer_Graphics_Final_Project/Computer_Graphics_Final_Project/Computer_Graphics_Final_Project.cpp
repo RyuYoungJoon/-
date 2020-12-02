@@ -749,23 +749,23 @@ void Timerfunction(int value)
         }
 
 
-        if (jump_button)
-        {
-            can_t_y += jump_y_vec;
-
-            can_bounding_box[0].y += jump_y_vec;
-            can_bounding_box[1].y += jump_y_vec;
-
-            if (can_bounding_box[0].y >= max_jump)
-                jump_y_vec *= -1;
-            if (can_bounding_box[0].y <= 3.0f)
-            {
-                jump_button = false;
-                jump_y_vec *= -1;
-            }
-        }
     }
 
+    if (jump_button)
+    {
+        can_t_y += jump_y_vec;
+
+        can_bounding_box[0].y += jump_y_vec;
+        can_bounding_box[1].y += jump_y_vec;
+
+        if (can_bounding_box[0].y >= max_jump)
+            jump_y_vec *= -1;
+        if (can_bounding_box[0].y <= 3.0f)
+        {
+            jump_button = false;
+            jump_y_vec *= -1;
+        }
+    }
     
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
@@ -773,7 +773,7 @@ void Timerfunction(int value)
 
 void Mouse(int button, int state, int x, int y)
 {
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+    if ((button == GLUT_LEFT_BUTTON && state == GLUT_DOWN))
     {
         mouse_botton = true;
     }
