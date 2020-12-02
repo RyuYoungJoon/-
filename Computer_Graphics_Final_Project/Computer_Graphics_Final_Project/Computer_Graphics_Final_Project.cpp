@@ -3,6 +3,7 @@
 #include<random>
 #include<windows.h>
 #include<vector>
+#include<math.h>
 
 //#include<gl/glew.h>
 //#include<gl/freeglut.h> 
@@ -76,7 +77,7 @@ float Camera_xAT = 0.0f;
 float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
-float x_pos = -30.0f;
+float x_pos = 0.0f;
 float y_pos = 0.0f;
 float z_pos = 0.0f;
 
@@ -105,7 +106,7 @@ float light_b = 1.0;
 bool Open_mode = true;
 bool Down_node = true;
 
-float rad = 20.0f;
+float rad = 30.0f;
 
 float Down_Wheel = 0.0f;        // 톱니바퀴 떨어지는 첫번째 구간
 float Down_Wheel2 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
@@ -115,14 +116,14 @@ float Down_Wheel5 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
 float Down_Wheel6 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
                   
 // 캔 trans 좌표 변수
-float can_t_x = -30.0f;
-float can_t_y = 0.0f;
+float can_t_x = 0.0f;
+float can_t_y = 2.0f;
 float can_t_z = 0.0f;
-float acceleration = 1.0f;
+float acceleration = 0.0f;
 
 // 캔의 x, y ,z 속도 벡터
 float can_x_vec = 0.05f;
-float can_y_vec = 0.05f;
+float can_y_vec = 0.0f;
 float can_z_vec = 0.1f;
 
 // 캔의 x, y, z 회전률 
@@ -130,11 +131,12 @@ float can_x_rt = 10.0f;
 float can_y_rt = 10.0f;
 float can_z_rt = 30.0f;
 
-float camera_acceleration = 1.0f;
+float camera_acceleration = 0.0f;
 float can_rt = 0.0f;
 
-float max_jump = 10.0f;
-float jump_y_vec = 0.2;
+float max_jump = 15.0f;
+float min_jump = 2.0f;
+float jump_y_vec = 0.25;
 
 // 마우스 불 변수
 bool mouse_botton;
@@ -170,17 +172,18 @@ struct bb
     float x, y, z;
 };
 
-bb path_bounding_box[] =
+bb path_bb[] =
 {
-    44.0f, 5.0f, 0.0,
-    54.0f, 5.0f, 0.0,
+    0.0f, 0.0f, 0.0,
+    140.0f, 0.0f, 0.0,
 };
 
-bb can_bounding_box[] =
+bb can_bb[] =
 {
-    -32.0, 3.0, 0.0, // 좌상단 (-32.0, 1.5)
-    -28.0, 0.0, 0.0, // 우하단 (-28.0, 0.0)
+    0.0f, 0.0f, 0.0f
 };
+
+bool coilision(bb can[], bb path[]);
 
 GLuint vao[10], vbo[10];
 
@@ -190,7 +193,7 @@ std::vector< glm::vec3 > cube_normals;
 
 std::vector< glm::vec3 > pyramid_vertices;
 std::vector< glm::vec2 > pyramid_uvs;
-std::vector< glm::vec3 > pyramid_normals; // 지금은 안쓸거에요. 
+std::vector< glm::vec3 > pyramid_normals;
 
 std::vector< glm::vec3 > wheel_vertices;
 std::vector< glm::vec2 > wheel_uvs;
@@ -570,6 +573,7 @@ void Keyboard(unsigned char key, int x, int y)
 
 void Timerfunction(int value)
 {
+    /*
     // 장애물 땅 열리기
     if (Open_mode)
     {
@@ -607,11 +611,13 @@ void Timerfunction(int value)
     Down_Wheel6 += 1.0f;
     if (Down_Wheel6 >= 130.0f)
         Down_Wheel6 = 0.0f;
+    */
 
     // 플레이어 이동 + 카메라 회전
     
     if (mouse_botton)
     {
+        /*
         if (can_t_x < 358.0f && (can_t_y >= -10.0f && can_t_y<=50.0f))
         {
             can_t_x += can_x_vec * acceleration;
@@ -622,11 +628,18 @@ void Timerfunction(int value)
             x_pos += can_x_vec * camera_acceleration;
             
             acceleration += 0.01f;
-            camera_acceleration += 0.01f;
-
             if (acceleration >= 5.0f) acceleration = 5.0f;
+            
+            camera_acceleration += 0.01f;
             if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-            /*
+
+            if (can_t_x >= 140.0f && can_t_x <= 160.0f)
+            {
+                //min_jump = 10.0f;
+                if(can_t_y<= min_jump)
+                    can_t_y = 10.0f;
+            }
+            
             if (jump_button)
             {
                 can_t_y += 0.2f;
@@ -663,16 +676,17 @@ void Timerfunction(int value)
                     can_bounding_box[0].y = 0.0f;
                     can_bounding_box[1].y = 0.0f;
                 }
-            }*/
+            }
 
             //x1, y1(-40.0, 0.0) / x2, y2(100, -0.1) / x3, y3 (can_bounding_box[0].x , can_bounding_box[0].y) / x4, y4 (can_bounding_box[1].x , can_bounding_box[1].y)
-            //if (((0.0f <= can_bounding_box[0].y && can_bounding_box[0].y <= -0.1f || -0.1f <= can_bounding_box[0].y && can_bounding_box[0].y <= 0.0f) &&
-            //    (0.0f <= can_bounding_box[1].y && can_bounding_box[1].y <= -0.1f || -0.1f <= can_bounding_box[1].y && can_bounding_box[1].y <= 0.0f)))
-            //    // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
-            //{
-            //    //cout << "충돌이 일어났습니다." << endl;
-            //}
+            if (((0.0f <= can_bounding_box[0].y && can_bounding_box[0].y <= -0.1f || -0.1f <= can_bounding_box[0].y && can_bounding_box[0].y <= 0.0f) &&
+                (0.0f <= can_bounding_box[1].y && can_bounding_box[1].y <= -0.1f || -0.1f <= can_bounding_box[1].y && can_bounding_box[1].y <= 0.0f)))
+                // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
+            {
+                //cout << "충돌이 일어났습니다." << endl;
+            }
 
+            
             if ((45.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 55.0f) ||
                 (45.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 55.0f))
                 // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
@@ -685,7 +699,7 @@ void Timerfunction(int value)
                 }
             }
 
-            /*
+            
             if (((-40.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 44.0f || 44.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= -40.0f) && 
                 (-40.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 44.0f || 44.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= -40.0f)) && 
                 ((1.2f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.3f || 1.3f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.2f) && 
@@ -696,9 +710,10 @@ void Timerfunction(int value)
                 cout << "충돌이 일어났습니다." << endl;
             }
 
-            else cout << "충돌이 안일어 났습니다" << endl;*/
+            else cout << "충돌이 안일어 났습니다" << endl;
         }
 
+        
         if (can_t_x >= 357.0f && can_t_x <= 380.0f)
         {
             //camera_rt = 90.0f;
@@ -746,27 +761,65 @@ void Timerfunction(int value)
 
             if (acceleration >= 5.0f) acceleration = 5.0f;
             if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-        }
+        }*/
+        can_t_x += can_x_vec * acceleration;
+        acceleration += 0.01f;
+        if (acceleration >= 5.0f) acceleration = 5.0f;
 
+        x_pos += can_x_vec * camera_acceleration;
+        camera_acceleration += 0.01f;
+        if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
+    }
 
-        if (jump_button)
+    if (!mouse_botton)
+    {
+        can_t_x += can_x_vec * acceleration;
+        acceleration -= 0.01f;
+        if (acceleration <= 0.0f) acceleration = 0.0f;
+
+        x_pos += can_x_vec * camera_acceleration;
+        camera_acceleration -= 0.01f;
+        if (camera_acceleration <= 0.0f) camera_acceleration = 0.0f;
+    }
+
+    if (jump_button)
+    {
+        can_t_y += jump_y_vec;
+
+        can_bb[0].y += jump_y_vec;
+
+        if (can_t_y >= max_jump)
+            jump_y_vec *= -1;
+
+        if (can_t_y<= min_jump)
         {
-            can_t_y += jump_y_vec;
-
-            can_bounding_box[0].y += jump_y_vec;
-            can_bounding_box[1].y += jump_y_vec;
-
-            if (can_bounding_box[0].y >= max_jump)
-                jump_y_vec *= -1;
-            if (can_bounding_box[0].y <= 3.0f)
-            {
-                jump_button = false;
-                jump_y_vec *= -1;
-            }
+            jump_button = false;
+            jump_y_vec *= -1;
         }
     }
 
-    
+    //can_t_y -= can_y_vec;
+
+    if (can_t_y >= 0.0f)
+        can_y_vec = 0.0f;
+
+    if (can_t_y < 0.0f)
+    {
+        can_y_vec = 0.1f;
+    }
+
+    if (can_t_x >= 140.0f && can_t_x <= 200.0f)
+    {
+        //can_y_vec = 0.1f;
+        //can_t_y -= can_y_vec;
+        cout << "1계단 도착" << endl;
+
+        if (can_t_x >= 150.0f && can_t_x <= 170.0f && can_t_y >=10.0f)
+        {
+            max_jump = 25.0f;
+            min_jump = 12.0f;
+        }
+    }
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
@@ -780,30 +833,48 @@ void Mouse(int button, int state, int x, int y)
 
     if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
     {
-        acceleration = 1.0f;
-        camera_acceleration = 1.0f;
         mouse_botton = false;
     }
     
     if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
     {
         jump_button = true;
-        jump_y_vec = 0.2f;
     }
 }   
 
 GLvoid DrawMap()
 {
     // 경로
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 1.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(70.0, 1.0, 1.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(70.0, 0.0, 0.0));
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(S));
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
     unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(10.0, 1.0, 1.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(160.0, 10.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(10.0, 1.0, 1.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(190.0, 15.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    /*
     S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 1.0, 5.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 4.0, 0.0));
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -831,7 +902,8 @@ GLvoid DrawMap()
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
+    */
+    /*
     S = glm::scale(glm::mat4(1.0f), glm::vec3(24.0, 0.5, 5.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(110.0, 0.0, 0.0));
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -1261,13 +1333,13 @@ GLvoid DrawMap()
 
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
-
+    */
 }
 
 GLvoid DrawPlayer()
 {
     Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 2.0f, can_t_z));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y, can_t_z));
     unsigned int player = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T));
     unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
@@ -1286,4 +1358,20 @@ void make_circle()
         circle[i].x = glm::cos(glm::radians(float(i * 10))) * r;
         circle[i].z = rad + glm::sin(glm::radians(float(i * 10))) * r;
     }
+}
+
+bool coilision(bb can[], bb path[])
+{
+    float dis;
+
+    if (can[0].x <= path[0].x && can[0].x >= path[1].x)
+    {
+        dis = abs(can[0].y - path[0].y);
+
+        if (dis < 0.0f)
+            return true;
+
+        else return false;
+    }
+    
 }
