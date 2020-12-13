@@ -142,7 +142,7 @@ float can_z_rt = 30.0f;
 float camera_acceleration = 0.0f;
 float can_rt = 0.0f;
 
-float max_jump = 15.0f;
+float max_jump = 13.0f;
 float min_jump = 2.0f;
 float jump_y_vec = 0.25;
 
@@ -181,6 +181,28 @@ struct figure
 
 figure circle[36];
 
+//figure rect[] =
+//{
+//    -0.5f,0.5f,0.0f,1.0f,1.0f,1.0f,
+//    -0.5f,-0.5f,0.0f,1.0f,1.0f,1.0f,
+//    0.5f,-0.5f,0.0f,1.0f,1.0f,1.0f,
+//
+//    0.5f,-0.5f,0.0f,1.0f,1.0f,1.0f,
+//    0.5f,0.5f,0.0f,1.0f,1.0f,1.0f,
+//    -0.5f,0.5f,0.0f,1.0f,1.0f,1.0f
+//};
+
+figure rect1[] =
+{
+    2.0f,141.0f,0.0f,1.0f,1.0f,1.0f,
+    2.0f,135.0f,0.0f,1.0f,1.0f,1.0f,
+    8.0f,135.0f,0.0f,1.0f,1.0f,1.0f,
+
+    8.0f,135.0f,0.0f,1.0f,1.0f,1.0f,
+    8.0f,141.0f,0.0f,1.0f,1.0f,1.0f,
+    2.0f,141.0f,0.0f,1.0f,1.0f,1.0f
+};
+
 struct bb
 {
     float x, y, z;
@@ -196,6 +218,11 @@ bb can_bb[] =
 {
     0.0f, 0.0f, 0.0f
 };
+
+//bb wheel_bb[] =
+//{
+//
+//};
 
 bool coilision(bb can[], bb path[]);
 
@@ -431,18 +458,18 @@ void InitBuffer()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     glEnableVertexAttribArray(1);
-    // 원
-    /*
-    glBindVertexArray(vao[2]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(circle), circle, GL_STATIC_DRAW);
+    
+    glBindVertexArray(vao[3]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[6]);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rect1), rect1, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);*/
+    glEnableVertexAttribArray(1);
 }
 
 void InitShader()
@@ -539,215 +566,10 @@ void Timerfunction(int value)
 {
     if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25; }
     if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
-    /*
-    // 장애물 땅 열리기
-    if (Open_mode)
-    {
-        Open_Ground += 0.2f;
-        if (Open_Ground >= 10.0f)
-            Open_mode = false;
-    }
-    else
-    {
-        Open_Ground -= 0.2f;
-        if (Open_Ground <= 0.0f)
-            Open_mode = true;
-    }
 
-    // 톱니바퀴 회전
-    Wheel_R += 2.0f;
-
-    Down_Wheel += 0.4f;
-    if (Down_Wheel >= 40.0f)
-        Down_Wheel = 0.0f;
-
-    Down_Wheel2 += 0.5f;
-    if (Down_Wheel2 >= 60.0f)
-        Down_Wheel2 = 0.0f;
-
-    Down_Wheel3 += 1.0f;
-    if (Down_Wheel3 >= 100.0f)
-        Down_Wheel3 = 0.0f;
-    Down_Wheel4 += 1.0f;
-    if (Down_Wheel4 >= 110.0f)
-        Down_Wheel4 = 0.0f;
-    Down_Wheel5 += 1.0f;
-    if (Down_Wheel5 >= 120.0f)
-        Down_Wheel5 = 0.0f;
-    Down_Wheel6 += 1.0f;
-    if (Down_Wheel6 >= 130.0f)
-        Down_Wheel6 = 0.0f;
-    */
-
-    // 플레이어 이동 + 카메라 회전
-    
-    if (mouse_botton)
-    {
-        /*
-        if (can_t_x < 358.0f && (can_t_y >= -10.0f && can_t_y<=50.0f))
-        {
-            can_t_x += can_x_vec * acceleration;
-
-            can_bounding_box[0].x += can_x_vec * acceleration;
-            can_bounding_box[1].x += can_x_vec * acceleration;
-
-            x_pos += can_x_vec * camera_acceleration;
-            
-            acceleration += 0.01f;
-            if (acceleration >= 5.0f) acceleration = 5.0f;
-            
-            camera_acceleration += 0.01f;
-            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-
-            if (can_t_x >= 140.0f && can_t_x <= 160.0f)
-            {
-                //min_jump = 10.0f;
-                if(can_t_y<= min_jump)
-                    can_t_y = 10.0f;
-            }
-            
-            if (jump_button)
-            {
-                can_t_y += 0.2f;
-
-                can_bounding_box[0].y += 0.2f;
-                can_bounding_box[1].y += 0.2f;
-                //cout << "점프 올라가는 중" << endl;
-                if (can_bounding_box[0].y >= 10.0f)
-                    jump_button = false;
-            }
-
-            if (jump_button == false)
-            {
-                can_t_y -= jump_y_vec;
-
-                can_bounding_box[0].y -= 0.2f;
-                can_bounding_box[1].y -= 0.2f;
-                //cout << "점프 내려가는 중" << endl;
-                
-                if (((44.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 56.0f || 56.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 44.0f) &&
-                    (44.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 56.0f || 56.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 44.0f)) &&
-                    ((5.0f <= can_bounding_box[0].y && can_bounding_box[0].y <= 4.5f || 4.5f <= can_bounding_box[0].y && can_bounding_box[0].y <= 5.0f) &&
-                    (5.0f <= can_bounding_box[1].y && can_bounding_box[1].y <= 4.5f || 4.5f <= can_bounding_box[1].y && can_bounding_box[1].y <= 5.0f)))
-                    // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
-                {
-                    jump_y_vec = 0.0f;
-                    can_t_y = 5.0f;
-                    cout << "계단 1에 충돌이 일어났습니다." << endl;
-                }
-
-                if (can_t_y <= 0.0f)
-                {
-                    can_t_y = 0.0f;
-                    can_bounding_box[0].y = 0.0f;
-                    can_bounding_box[1].y = 0.0f;
-                }
-            }
-
-            //x1, y1(-40.0, 0.0) / x2, y2(100, -0.1) / x3, y3 (can_bounding_box[0].x , can_bounding_box[0].y) / x4, y4 (can_bounding_box[1].x , can_bounding_box[1].y)
-            if (((0.0f <= can_bounding_box[0].y && can_bounding_box[0].y <= -0.1f || -0.1f <= can_bounding_box[0].y && can_bounding_box[0].y <= 0.0f) &&
-                (0.0f <= can_bounding_box[1].y && can_bounding_box[1].y <= -0.1f || -0.1f <= can_bounding_box[1].y && can_bounding_box[1].y <= 0.0f)))
-                // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
-            {
-                //cout << "충돌이 일어났습니다." << endl;
-            }
-
-            
-            if ((45.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 55.0f) ||
-                (45.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 55.0f))
-                // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
-            {
-                if (can_bounding_box[1].y <= 4.0f && can_t_y <= 4.0f)
-                {
-                    can_t_y = 4.0f;
-                    max_jump = 14.0f;
-                    cout << "계단 1에 충돌이 일어났습니다." << endl;
-                }
-            }
-
-            
-            if (((-40.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= 44.0f || 44.0f <= can_bounding_box[0].x && can_bounding_box[0].x <= -40.0f) && 
-                (-40.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= 44.0f || 44.0f <= can_bounding_box[1].x && can_bounding_box[1].x <= -40.0f)) && 
-                ((1.2f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.3f || 1.3f <= can_bounding_box[0].y && can_bounding_box[0].y <= 1.2f) && 
-                (1.2f <= can_bounding_box[1].y && can_bounding_box[1].y <= 1.3f || 1.3f <= can_bounding_box[1].y && can_bounding_box[1].y <= 1.2f)))
-                // x3가 x1, x2 범위 안에 있고 y3가 y1, y2 범위안에 있거나 // x4가 x1, x2 범위 안에 있고 y4가 y1, y2 범위안에 있다면
-            {
-                
-                cout << "충돌이 일어났습니다." << endl;
-            }
-
-            else cout << "충돌이 안일어 났습니다" << endl;
-        }
-
-        
-        if (can_t_x >= 357.0f && can_t_x <= 380.0f)
-        {
-            //camera_rt = 90.0f;
-            degree -= degree_vec;
-            if (degree <= 90.0f) degree_vec = 0.0f;
-
-            can_t_y -= can_y_vec * acceleration;
-            acceleration += 0.01f;
-
-            y_pos -= can_y_vec * camera_acceleration;
-            camera_acceleration += 0.01f;
-
-            if (acceleration >= 5.0f) acceleration = 5.0f;
-            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-
-            if (jump_button)
-            {
-                can_t_x += 0.1f;
-                if (can_t_x >= 362.0f)
-                    jump_button = false;
-
-            }
-            if (jump_button == false)
-            {
-                can_t_x -= 0.1f;
-                if (can_t_x <= 357.0f)
-                    can_t_x = 357.0f;
-            }
-        }
-
-        if (can_t_x <= 380.0f && can_t_y<=-43.0f)
-        {
-            y_pos = 40.0f;
-            degree = 45.0f;
-            //if (degree >= 90.0f) degree_vec = 0.0f;
-
-            camera_rt += camera_rt_vec;
-            if (camera_rt >= 180.0f) camera_rt_vec = 0;
-
-            can_t_x -= can_x_vec * acceleration;
-            acceleration += 0.01f;
-
-            x_pos -= can_x_vec * camera_acceleration;
-            camera_acceleration += 0.01f;
-
-            if (acceleration >= 5.0f) acceleration = 5.0f;
-            if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-        }*/
-        can_t_x += can_x_vec * acceleration;
-        acceleration += 0.01f;
-        if (acceleration >= 5.0f) acceleration = 5.0f;
-
-        x_pos += can_x_vec * camera_acceleration;
-        camera_acceleration += 0.01f;
-        if (camera_acceleration >= 5.0f) camera_acceleration = 5.0f;
-    }
-
-    if (!mouse_botton)
-    {
-        can_t_x += can_x_vec * acceleration;
-        acceleration -= 0.01f;
-        if (acceleration <= 0.0f) acceleration = 0.0f;
-
-        x_pos += can_x_vec * camera_acceleration;
-        camera_acceleration -= 0.01f;
-        if (camera_acceleration <= 0.0f) camera_acceleration = 0.0f;
-    }
-
+    if (can_t_x < 0.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
+    if (can_t_x > 78.0f) { can_t_x = 78.0f, x_pos = 78.0f; }
+   
     if (jump_button)
     {
         can_t_y += jump_y_vec;
@@ -761,29 +583,6 @@ void Timerfunction(int value)
         {
             jump_button = false;
             jump_y_vec *= -1;
-        }
-    }
-
-    //can_t_y -= can_y_vec;
-
-    if (can_t_y >= 0.0f)
-        can_y_vec = 0.0f;
-
-    if (can_t_y < 0.0f)
-    {
-        can_y_vec = 0.1f;
-    }
-
-    if (can_t_x >= 140.0f && can_t_x <= 200.0f)
-    {
-        //can_y_vec = 0.1f;
-        //can_t_y -= can_y_vec;
-        cout << "1계단 도착" << endl;
-
-        if (can_t_x >= 150.0f && can_t_x <= 170.0f && can_t_y >=10.0f)
-        {
-            max_jump = 25.0f;
-            min_jump = 12.0f;
         }
     }
 
@@ -1126,10 +925,9 @@ GLvoid DrawObsRect()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 }
+
 GLvoid DrawObsWheel()
 {
-    // 톱니바퀴
-
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x, 93.0f, 0.0f));
@@ -1140,10 +938,34 @@ GLvoid DrawObsWheel()
     unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
 
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 138.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
 
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+    
+    //박스
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0f, 0.0f));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Blue.r, Blue.g, Blue.b);
+
+    glBindVertexArray(vao[3]);
+    glDrawArrays(GL_TRIANGLES, 0, 13);
 }
+
 void make_circle()
 {
     float r = 30.0;
