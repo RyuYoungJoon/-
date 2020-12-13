@@ -739,6 +739,13 @@ void Timerfunction(int value)
             min_jump = 12.0f;
         }
     }
+
+    Block_speed += 0.2f;
+    if (Block_speed >= 30.0f)
+        Block_speed *= -1;
+    if (Block_speed <= -30.0f)
+        Block_speed *= -1;
+
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
@@ -896,7 +903,7 @@ GLvoid DrawMap()
 
     // 3類 夥款 ~ 4類 繭濰 漁給
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0f, 60.0f - Block_speed, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(43.0f, 60.0f - Block_speed, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -907,19 +914,6 @@ GLvoid DrawMap()
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 70.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
 
 
     // 6類
