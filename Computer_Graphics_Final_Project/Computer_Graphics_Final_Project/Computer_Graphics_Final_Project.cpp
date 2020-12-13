@@ -35,6 +35,8 @@ void make_fragmentshader();
 void InitShader();
 void InitBuffer();
 void Keyboard(unsigned char, int, int);
+void SpecialKeyboard(int key, int x, int y);
+void SpecialKeyboardup(int key, int x, int y);
 void Timerfunction(int);
 void Mouse(int button, int state, int x, int y);
 GLvoid DrawMap();
@@ -254,7 +256,8 @@ void main(int argc, char** argv)
     glutDisplayFunc(drawScene);
     glutReshapeFunc(Reshape);
     glutKeyboardFunc(Keyboard);
-    glutMouseFunc(Mouse);
+    glutSpecialFunc(SpecialKeyboard);
+    glutSpecialUpFunc(SpecialKeyboardup);
     glutTimerFunc(1, Timerfunction, 1);
     glutMainLoop();
 }
@@ -487,11 +490,46 @@ void Keyboard(unsigned char key, int x, int y)
     case 'R':
         degree -= 2.0;
         break;
+    case 32:
+        jump_button = true;
+        break;
+    }
+}
+
+bool lb = false, rb = false;
+
+void SpecialKeyboard(int key, int x, int y)
+{
+    if (key == GLUT_KEY_LEFT)
+    {
+        lb = true;
+        rb = false;
+    }
+    if (key == GLUT_KEY_RIGHT)
+    {
+        lb = false;
+        rb = true;
+    }
+}
+
+void SpecialKeyboardup(int key, int x, int y)
+{
+    if (key == GLUT_KEY_LEFT)
+    {
+        lb = false;
+        rb = false;
+    }
+    if (key == GLUT_KEY_RIGHT)
+    {
+        lb = false;
+        rb = false;
     }
 }
 
 void Timerfunction(int value)
 {
+    if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25; }
+    if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
     /*
     // 장애물 땅 열리기
     if (Open_mode)
@@ -749,24 +787,6 @@ void Timerfunction(int value)
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
-
-void Mouse(int button, int state, int x, int y)
-{
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
-    {
-        mouse_botton = true;
-    }
-
-    if (button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-    {
-        mouse_botton = false;
-    }
-    
-    if (button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-    {
-        jump_button = true;
-    }
-}   
 
 GLvoid DrawMap()
 {
@@ -1073,20 +1093,4 @@ void make_circle()
         circle[i].x = glm::cos(glm::radians(float(i * 10))) * r;
         circle[i].z = rad + glm::sin(glm::radians(float(i * 10))) * r;
     }
-}
-
-bool coilision(bb can[], bb path[])
-{
-    float dis;
-
-    if (can[0].x <= path[0].x && can[0].x >= path[1].x)
-    {
-        dis = abs(can[0].y - path[0].y);
-
-        if (dis < 0.0f)
-            return true;
-
-        else return false;
-    }
-    
 }
