@@ -148,6 +148,9 @@ float jump_y_vec = 0.25;
 bool mouse_botton;
 bool jump_button;
 
+float block_vec = 0.2f;
+
+
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 Blue = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -778,11 +781,9 @@ void Timerfunction(int value)
         }
     }
 
-    Block_speed += 0.2f;
-    if (Block_speed >= 30.0f)
-        Block_speed *= -1;
-    if (Block_speed <= -30.0f)
-        Block_speed *= -1;
+    Block_speed += block_vec;
+    if (Block_speed >= 28.0f || Block_speed<=0.0f)
+        block_vec *= -1;
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
@@ -923,7 +924,7 @@ GLvoid DrawMap()
 
     // 3類 夥款 ~ 4類 繭濰 漁給
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(43.0f, 60.0f - Block_speed, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0f, 30.0f + Block_speed, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -935,6 +936,31 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 60.0f - Block_speed, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(60.0f, 60.0f - Block_speed, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
     // 6類
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
@@ -988,6 +1014,21 @@ GLvoid DrawMap()
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 體棲夥襪
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 90.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold .r, Gold.g, Gold.b);
+
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
 
     // 8類 
