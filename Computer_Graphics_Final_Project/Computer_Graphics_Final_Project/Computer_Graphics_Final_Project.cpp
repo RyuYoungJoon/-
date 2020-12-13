@@ -797,6 +797,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));  // 이거 지우셈
 
     /*
     S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 1.0, 5.0));
