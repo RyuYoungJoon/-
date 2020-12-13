@@ -175,7 +175,7 @@ struct bb
 bb path_bb[] =
 {
     0.0f, 0.0f, 0.0,
-    140.0f, 0.0f, 0.0,
+    50.0f, 0.0f, 0.0,
 };
 
 bb can_bb[] =
@@ -198,91 +198,6 @@ std::vector< glm::vec3 > pyramid_normals;
 std::vector< glm::vec3 > wheel_vertices;
 std::vector< glm::vec2 > wheel_uvs;
 std::vector< glm::vec3 > wheel_normals;
-
-//bool loadOBJ(
-//    const char* path,
-//    std::vector<glm::vec3>& out_vertices,
-//    std::vector<glm::vec2>& out_uvs,
-//    std::vector<glm::vec3>& out_normals
-//)
-//{
-//    std::vector<unsigned int> vertexIndices, uvIndices, normalIndices;
-//    std::vector<glm::vec3>temp_vertices;
-//    std::vector<glm::vec2>temp_uvs;
-//    std::vector<glm::vec3>temp_normals;
-//
-//    FILE* file = fopen(path, "r");
-//    if (file == NULL)
-//    {
-//        std::cout << "파일 열수 없음!" << std::endl;
-//        return false;
-//    }
-//
-//    while (1) {
-//        char lineHeader[128];
-//        int res = fscanf(file, "%s", lineHeader);
-//        if (res == EOF)
-//            break;;
-//
-//        if (strcmp(lineHeader, "v") == 0) {
-//            glm::vec3 vertex;
-//            fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z);
-//            temp_vertices.push_back(vertex);
-//        }
-//        else if (strcmp(lineHeader, "vt") == 0) {
-//            glm::vec2 uv;
-//            fscanf(file, "%f %f\n", &uv.x, &uv.y);
-//            temp_uvs.push_back(uv);
-//        }
-//
-//        else if (strcmp(lineHeader, "vn") == 0) {
-//            glm::vec3 normal;
-//            fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z);
-//            temp_normals.push_back(normal);
-//        }
-//
-//        else if (strcmp(lineHeader, "f") == 0)
-//        {
-//            std::string vertex1, vertex2, vertex3;
-//            unsigned int vertexIndex[3], uvIndex[3], normalIndex[3];
-//            int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0],
-//                &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
-//            if (matches != 9) {
-//                std::cout << "나의 간단한 프로그램으론 읽을수없다." << std::endl;
-//                return false;
-//            }
-//            vertexIndices.push_back(vertexIndex[0]);
-//            vertexIndices.push_back(vertexIndex[1]);
-//            vertexIndices.push_back(vertexIndex[2]);
-//            uvIndices.push_back(uvIndex[0]);
-//            uvIndices.push_back(uvIndex[1]);
-//            uvIndices.push_back(uvIndex[2]);
-//            normalIndices.push_back(normalIndex[0]);
-//            normalIndices.push_back(normalIndex[1]);
-//            normalIndices.push_back(normalIndex[2]);
-//        }
-//
-//        for (unsigned int i = 0; i < vertexIndices.size(); i++) {
-//            unsigned int vertexIndex = vertexIndices[i];
-//            glm::vec3 vertex = temp_vertices[vertexIndex - 1];
-//            out_vertices.push_back(vertex);
-//        }
-//
-//        for (unsigned int i = 0; i < uvIndices.size(); i++) {
-//            unsigned int uvIndex = uvIndices[i];
-//            glm::vec2 uv = temp_uvs[uvIndex - 1];
-//            out_uvs.push_back(uv);
-//        }
-//
-//        for (unsigned int i = 0; i < normalIndices.size(); i++) {
-//            unsigned int normalIndex = normalIndices[i];
-//            glm::vec3 normal = temp_normals[normalIndex - 1];
-//            out_normals.push_back(normal);
-//        }
-//
-//    }
-//
-//}
 
 bool res_cube = loadOBJ("cube.obj", cube_vertices, cube_uvs, cube_normals);
 bool res_pyramid = loadOBJ("pyramid.obj", pyramid_vertices, pyramid_uvs, pyramid_normals);
@@ -845,35 +760,44 @@ void Mouse(int button, int state, int x, int y)
 GLvoid DrawMap()
 {
     // 경로
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(70.0, 1.0, 1.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(70.0, 0.0, 0.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 1.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0, 0.0, 0.0));
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
     unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(10.0, 1.0, 1.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(160.0, 10.0, 0.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 15.0f, 0.0f));
+
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+   
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f, 10.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(10.0, 1.0, 1.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(190.0, 15.0, 0.0));
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
     /*
     S = glm::scale(glm::mat4(1.0f), glm::vec3(5.0, 1.0, 5.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(50.0, 4.0, 0.0));
