@@ -81,7 +81,7 @@ float Camera_xAT = 0.0f;
 float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
-float x_pos = 0.0f;
+float x_pos = 50.0f;
 float y_pos = 50.0f;
 float z_pos = 70.0f;
 
@@ -124,8 +124,8 @@ float Down_Wheel6 = 0.0f;       // Åé´Ï¹ÙÄû ¶³¾îÁö´Â µÎ¹øÂ° ±¸°£
 float Block_speed = 0.0f;
 
 // Äµ trans ÁÂÇ¥ º¯¼ö
-float can_t_x = 0.0f;
-float can_t_y = 0.0f;
+float can_t_x = 50.0f;
+float can_t_y = 15.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
@@ -460,10 +460,6 @@ bb can_bb[] =
     0.0f, 0.0f, 0.0f
 };
 
-//bb wheel_bb[] =
-//{
-//
-//};
 
 bool coilision(float, float);
 
@@ -1052,9 +1048,11 @@ void Timerfunction(int value)
     if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25; }
     if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
 
-    if (can_t_x < 0.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
+    if (can_t_x < 0.0f && can_t_y<=13.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
     if (can_t_x > rect3[0].x - 1.0f && can_t_y < 8.0f) { can_t_x = 79.0f, x_pos = 79.0f; }
     if (can_t_x > rect3[2].x - 1.0f && can_t_y >= 8.0f) { can_t_x = 83.0f, x_pos = 83.0f; }
+    if (can_t_x - 0.9f < rect5[2].x && can_t_y < 23.0f) { can_t_x = 1.1f, x_pos = 1.1f; }
+    if (can_t_x - 1.0f < rect5[0].x && can_t_y >= 23.0f) { can_t_x = -3.0f, x_pos = -3.0f; }
     //if ((can_t_x - 1.0f > rect4[2].x && can_t_x - 1.0f < rect4[2].x+0.01f)&& ( (can_t_y + 1.0f < 15.0f && can_t_y + 1.0f > 13.0f) || (can_t_y - 1.0f < 14.9f && can_t_y - 1.0f > 13.0f) )) { can_t_x = 71.0f, x_pos = 71.0f; }
 
     if (jump_button)
@@ -1065,11 +1063,9 @@ void Timerfunction(int value)
     }
     else if (coilision(can_t_y, rect2[0].y)) { can_t_y = 0.0f, min_jump = 0.0f; }
     else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 8.0f; }
-<<<<<<< HEAD
-    else if (can_t_x < 71.0f && can_t_x>0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
-=======
-    else if (can_t_x<71.0f && can_t_x>0.0f && can_t_y>=15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
->>>>>>> parent of 68714d1... 2ì¸µ ê³„ë‹¨ ì¶©ëŒ
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect5[0].y)) { can_t_y = 23.0f, min_jump = 23.0f; }
+
     //else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 10.0f; }
     else can_t_y -= 0.4f;
 
