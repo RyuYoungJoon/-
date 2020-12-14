@@ -11,7 +11,7 @@ in vec3 Normal;
 
 uniform int flag;
 
-uniform vec3 Alpha; 
+uniform float Alpha; 
 out vec4 gl_FragColor;
 
 void main()

@@ -609,10 +609,14 @@ GLvoid drawScene()
     unsigned int flag = glGetUniformLocation(s_program[2], "flag");
     glUniform1i(flag, 1);
     DrawPlayer();
+
     glUniform1i(flag, 0);
-    DrawMap();
     DrawObsRect();
     DrawObsWheel();
+
+    unsigned int Alpha = glGetUniformLocation(s_program[2], "Alpha");
+    glUniform1f(Alpha, 0.5f);
+    DrawMap();
 
     glutSwapBuffers();
 }
@@ -723,257 +727,6 @@ void InitBuffer()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     glEnableVertexAttribArray(1);
-
-
-    glBindVertexArray(vao[3]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[6]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect1), rect1, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // 1類 夥款
-    glBindVertexArray(vao[4]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[7]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_1floor), rect_1floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // 1類 啗欽
-    glBindVertexArray(vao[5]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[8]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_1wall), rect_1wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // 2類 夥款
-    glBindVertexArray(vao[6]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[9]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_2floor), rect_2floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // 2類 啗欽
-    glBindVertexArray(vao[7]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[10]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_2wall), rect_2wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //10類 夥款
-    glBindVertexArray(vao[8]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[10]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_10floor), rect_10floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //10類 啗欽
-    glBindVertexArray(vao[9]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[11]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_10wall), rect_10wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //9類 夥款
-    glBindVertexArray(vao[10]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[12]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_9floor), rect_9floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //9類 啗欽
-
-    glBindVertexArray(vao[11]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[13]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_9wall), rect_9wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //8類 夥款
-    glBindVertexArray(vao[12]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[14]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_8floor), rect_8floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //8類 啗欽
-
-    glBindVertexArray(vao[13]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[15]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_8wall), rect_8wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //7類 夥款
-    glBindVertexArray(vao[14]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[16]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_7floor), rect_7floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //7類 啗欽
-
-    glBindVertexArray(vao[15]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[17]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_7wall), rect_7wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //6類 夥款
-    glBindVertexArray(vao[16]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[18]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_6floor), rect_6floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //6類 啗欽
-
-    glBindVertexArray(vao[17]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[19]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_6wall), rect_6wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //5類 夥款
-    glBindVertexArray(vao[18]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[20]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_5floor), rect_5floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //5類 啗欽
-
-    glBindVertexArray(vao[19]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[21]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_5wall), rect_5wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    //4類 夥款
-    glBindVertexArray(vao[20]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[22]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_4floor), rect_4floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //4類 啗欽
-
-    glBindVertexArray(vao[21]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[23]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_4wall), rect_4wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //3類 夥款
-    glBindVertexArray(vao[22]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[24]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_3floor), rect_3floor, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-    //3類 啗欽
-
-    glBindVertexArray(vao[23]);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[25]);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(rect_3wall), rect_3wall, GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
 }
 
 void InitShader()
@@ -1179,9 +932,10 @@ void Timerfunction(int value)
 GLvoid DrawMap()
 {
     // 唳煎
-    // 1類 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 5.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0, 0.0, 0.0));
+    // 1類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 8.0f, 0.0f));
+
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
 
@@ -1191,19 +945,9 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[4]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
+    // 2類 啗欽
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 8.0f, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-1.9f, 23.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -1214,19 +958,125 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
+    // 3類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 38.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
 
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-    glBindVertexArray(vao[5]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
+    // 4類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 53.0f, 0.0f));
 
-    // 2類
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 5類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 68.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 6類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 83.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 7類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 98.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 8類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 113.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 9類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 128.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    // 10類 啗欽
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 143.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    // 1類 夥款
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 5.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0, 0.0, 0.0));
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[0]);
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    
+    // 2類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 15.0f, 0.0f));
 
@@ -1240,41 +1090,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[6]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-1.9f, 23.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[7]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 3類
+    // 3類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 30.0f, 0.0f));
 
@@ -1284,46 +1100,11 @@ GLvoid DrawMap()
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 38.0f, 0.0f));
 
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    // 3類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[22]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 3類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[23]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-    // 4類
+    // 4類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 45.0f, 0.0f));
 
@@ -1337,43 +1118,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 53.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-
-    // 4類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[20]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 4類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[21]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-    // 5類
+    // 5類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 60.0f, 0.0f));
 
@@ -1387,41 +1132,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 68.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    // 5類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[18]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 5類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[19]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 6類
+    // 6類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 75.0f, 0.0f));
 
@@ -1435,42 +1146,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 83.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    // 6類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[16]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 6類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[17]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 7類
-
+    // 7類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 90.0f, 0.0f));
 
@@ -1480,46 +1156,10 @@ GLvoid DrawMap()
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 98.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    // 7類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[14]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 7類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[15]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-
-    // 8類 
+    // 8類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 105.0f, 0.0f));
 
@@ -1529,45 +1169,10 @@ GLvoid DrawMap()
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 113.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-    // 8類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[12]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 8類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[13]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 9類
-
+    
+    // 9類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 120.0f, 0.0f));
 
@@ -1577,46 +1182,10 @@ GLvoid DrawMap()
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 128.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    // 9類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[10]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 9類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[11]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    // 10類
-
+    // 10類 夥款
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 135.0f, 0.0f));
 
@@ -1626,43 +1195,10 @@ GLvoid DrawMap()
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
 
-
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 143.0f, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    //10類 夥款
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[8]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
-
-    //10類 啗欽
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Green.r, Green.g, Green.b);
-
-    glBindVertexArray(vao[9]);
-    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    glDisable(GL_BLEND);
 }
 
 GLvoid DrawPlayer()
