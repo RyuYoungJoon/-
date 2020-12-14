@@ -1055,6 +1055,7 @@ void Timerfunction(int value)
     if (can_t_x - 1.0f < rect5[0].x && can_t_y >= 23.0f) { can_t_x = -3.0f, x_pos = -3.0f; }
     //if ((can_t_x - 1.0f > rect4[2].x && can_t_x - 1.0f < rect4[2].x+0.01f)&& ( (can_t_y + 1.0f < 15.0f && can_t_y + 1.0f > 13.0f) || (can_t_y - 1.0f < 14.9f && can_t_y - 1.0f > 13.0f) )) { can_t_x = 71.0f, x_pos = 71.0f; }
 
+    int a = 0;
     if (jump_button)
     {
         if (can_t_y <= min_jump + 11.0f)
