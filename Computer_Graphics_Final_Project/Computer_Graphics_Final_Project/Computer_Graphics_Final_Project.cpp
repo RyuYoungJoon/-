@@ -153,7 +153,8 @@ bool jump_button;
 float block_vec = 0.2f;
 float wheel_degree = 0.0f;
 float wheel_degree_vec = 3.5f;
-float Wheel_t_x = 75.0f;
+float Wheel_t_x1 = 75.0f;
+float Wheel_t_x2 = 10.0f;
 float Wheel_vec = 0.3f;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
@@ -643,8 +644,9 @@ void Timerfunction(int value)
 
     wheel_degree += wheel_degree_vec;
 
-    Wheel_t_x -= Wheel_vec;
-    if (Wheel_t_x >= 75.0f || Wheel_t_x <= 10.0f) { Wheel_vec *= -1, wheel_degree_vec *= -1; }
+    Wheel_t_x1 -= Wheel_vec;
+    Wheel_t_x2 += Wheel_vec;
+    if (Wheel_t_x1 >= 75.0f || Wheel_t_x1 <= 10.0f) { Wheel_vec *= -1, wheel_degree_vec *= -1; }
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
@@ -654,7 +656,7 @@ GLvoid DrawMap()
 {
     // 唳煎
     // 1類 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 1.0));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 5.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0, 0.0, 0.0));
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -676,8 +678,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[4]);
     glDrawArrays(GL_TRIANGLES, 0,6);
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 4.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 10.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 8.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -701,7 +703,7 @@ GLvoid DrawMap()
 
 
     // 2類
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 15.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -714,8 +716,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f + 1.0f, 25.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 25.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -727,7 +729,7 @@ GLvoid DrawMap()
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
     
     // 3類
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 30.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -740,8 +742,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 40.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 40.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -753,7 +755,7 @@ GLvoid DrawMap()
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
     // 4類
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 45.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -766,8 +768,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f + 1.0f, 55.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 55.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -779,7 +781,7 @@ GLvoid DrawMap()
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
     // 5類
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 60.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -792,8 +794,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 70.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 70.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -807,7 +809,7 @@ GLvoid DrawMap()
 
 
     // 6類
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 75.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -820,8 +822,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f + 1.0f, 85.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 85.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -834,7 +836,7 @@ GLvoid DrawMap()
 
     // 7類
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 90.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -847,8 +849,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 100.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 100.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -863,7 +865,7 @@ GLvoid DrawMap()
 
 
     // 8類 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 105.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -876,8 +878,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f + 1.0f, 115.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 115.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -890,7 +892,7 @@ GLvoid DrawMap()
 
     // 9類
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 120.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -903,8 +905,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(80.0f - 1.0f, 130.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 130.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -917,7 +919,7 @@ GLvoid DrawMap()
 
     // 10類
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 135.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -930,8 +932,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 5.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f + 1.0f, 145.0f, 0.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 145.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T* S));
@@ -1001,9 +1003,10 @@ GLvoid DrawObsRect()
 
 GLvoid DrawObsWheel()
 {
+
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x, 93.0f, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 15.0f, 0.0f));
 
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
@@ -1014,7 +1017,53 @@ GLvoid DrawObsWheel()
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 15.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(55.0f, 15.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x1, 93.0f, 2.5f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(-wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x2, 93.0f, -2.5f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 138.0f, 0.0f));
 
