@@ -155,6 +155,7 @@ float wheel_degree_vec = 3.5f;
 float Wheel_t_x1 = 75.0f;
 float Wheel_t_x2 = 10.0f;
 float Wheel_vec = 0.3f;
+float light_vec = 0.0001f;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -694,6 +695,12 @@ void Timerfunction(int value)
     Wheel_t_x1 -= Wheel_vec;
     Wheel_t_x2 += Wheel_vec;
     if (Wheel_t_x1 >= 75.0f || Wheel_t_x1 <= 10.0f) { Wheel_vec *= -1, wheel_degree_vec *= -1; }
+
+    light_r -= light_vec;
+    light_g -= light_vec;
+    light_b -= light_vec;
+
+
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
