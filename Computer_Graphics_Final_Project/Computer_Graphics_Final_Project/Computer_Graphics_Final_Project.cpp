@@ -125,7 +125,7 @@ float Block_speed = 0.0f;
 
 // Äµ trans ÁÂÇ¥ º¯¼ö
 float can_t_x = 0.0f;
-float can_t_y = 2.0f;
+float can_t_y = 0.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
@@ -142,9 +142,8 @@ float can_z_rt = 30.0f;
 float camera_acceleration = 0.0f;
 float can_rt = 0.0f;
 
-float max_jump = 13.0f;
 float min_jump = 0.0f;
-float jump_y_vec = 0.4;
+float jump_y_vec = 0.4f;
 
 // ¸¶¿ì½º ºÒ º¯¼ö
 bool mouse_botton;
@@ -204,7 +203,7 @@ figure rect1[] =
     2.0f,141.0f,0.0f,1.0f,1.0f,1.0f
 };
 
-
+// 1Ãþ ¹Ù´Ú
 figure rect2[] =
 {
     0.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
@@ -216,15 +215,40 @@ figure rect2[] =
     0.0f,0.0f,0.0f,1.0f,1.0f,1.0f
 };
 
+// 1Ãþ °è´Ü
 figure rect3[] =
 {
-    78.0f, 10.0f,0.0f,1.0f,1.0f,1.0f,
-    78.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
+    80.0f, 8.0f,0.0f,1.0f,1.0f,1.0f,
     80.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
+    84.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
 
-    80.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
-    80.0f, 10.0f,0.0f,1.0f,1.0f,1.0f,
-    78.0f,10.0f,0.0f,1.0f,1.0f,1.0f
+    84.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
+    84.0f, 8.0f,0.0f,1.0f,1.0f,1.0f,
+    80.0f, 8.0f,0.0f,1.0f,1.0f,1.0f
+};
+
+// 2Ãþ ¹Ù´Ú
+figure rect4[] =
+{
+    0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
+    0.0f, 13.0f,0.0f,1.0f,1.0f,1.0f,
+    70.0f, 13.0f,0.0f,1.0f,1.0f,1.0f,
+
+    70.0f, 13.0f,0.0f,1.0f,1.0f,1.0f,
+    70.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
+    0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f
+};
+
+// 2Ãþ °è´Ü
+figure rect5[] =
+{
+    -4.0f, 23.0f,0.0f,1.0f,1.0f,1.0f,
+    -4.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
+    0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
+
+    0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
+    0.0f, 23.0f,0.0f,1.0f,1.0f,1.0f,
+    -4.0f, 23.0f,0.0f,1.0f,1.0f,1.0f
 };
 
 struct bb
@@ -250,7 +274,7 @@ bb can_bb[] =
 
 bool coilision(float, float);
 
-GLuint vao[10], vbo[10];
+GLuint vao[20], vbo[20];
 
 std::vector< glm::vec3 > cube_vertices;
 std::vector< glm::vec2 > cube_uvs;
@@ -269,7 +293,7 @@ std::vector< glm::vec2 > wheel_uvs;
 std::vector< glm::vec3 > wheel_normals;
 
 bool res_cube = loadOBJ("cube.obj", cube_vertices, cube_uvs, cube_normals);
-bool res_player = loadOBJ("cube_player.obj", player_vertices, player_uvs, player_normals);
+bool res_player = loadOBJ("player.obj", player_vertices, player_uvs, player_normals);
 bool res_pyramid = loadOBJ("pyramid.obj", pyramid_vertices, pyramid_uvs, pyramid_normals);
 bool res_wheel = loadOBJ("top.obj", wheel_vertices, wheel_uvs, wheel_normals);
 
@@ -428,8 +452,8 @@ void make_fragmentshader()
 
 void InitBuffer()
 {
-    glGenVertexArrays(10, vao);
-    glGenBuffers(10, vbo);
+    glGenVertexArrays(20, vao);
+    glGenBuffers(20, vbo);
 
     // À°¸éÃ¼
     glBindVertexArray(vao[0]);
@@ -450,12 +474,12 @@ void InitBuffer()
 
     glEnableVertexAttribArray(1);
 
-    // ÇÇ¶ó¹Ìµå
+    // ÇÃ·¹ÀÌ¾î
     glBindVertexArray(vao[1]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
 
-    glBufferData(GL_ARRAY_BUFFER, pyramid_vertices.size() * sizeof(glm::vec3), &pyramid_vertices[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, player_vertices.size() * sizeof(glm::vec3), &player_vertices[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -463,7 +487,7 @@ void InitBuffer()
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
 
-    glBufferData(GL_ARRAY_BUFFER, pyramid_normals.size() * sizeof(glm::vec3), &pyramid_normals[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, player_normals.size() * sizeof(glm::vec3), &player_normals[0], GL_STATIC_DRAW);
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
@@ -500,6 +524,7 @@ void InitBuffer()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    // 1Ãþ ¹Ù´Ú
     glBindVertexArray(vao[4]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[7]);
 
@@ -511,10 +536,35 @@ void InitBuffer()
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    // 1Ãþ °è´Ü
     glBindVertexArray(vao[5]);
     glBindBuffer(GL_ARRAY_BUFFER, vbo[8]);
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(rect3), rect3, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // 2Ãþ ¹Ù´Ú
+    glBindVertexArray(vao[6]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[9]);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rect4), rect4, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    // 2Ãþ °è´Ü
+    glBindVertexArray(vao[7]);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[10]);
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(rect5), rect5, GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
@@ -619,24 +669,21 @@ void Timerfunction(int value)
     if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
 
     if (can_t_x < 0.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
-    if (can_t_x > rect3[0].x - 1.0f && can_t_y < 10.0f) { can_t_x = 77.0f, x_pos = 77.0f; }
-    if (can_t_x > rect3[2].x - 1.0f && can_t_y > 10.0f) { can_t_x = 79.0f, x_pos = 79.0f; }
-    //else if (can_t_x < rect3[0].x - 1.0f && coilision(can_t_y - 2.0f, rect2[0].y)) { can_t_y += 0.0f; }
-    //else can_t_y -= 0.2f;
-    //if (can_t_x < 0.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
-    //if (can_t_x > rect3[0].x-1.0f && can_t_y <10.0f) { can_t_x = 77.0f, x_pos = 77.0f; }
-
-    //if (can_t_y > 10.0f && can_t_x > 77.0f && can_t_x < 80.0f) { can_t_x = 79.0f, x_pos = 79.0f, min_jump = 13.0f; }
+    if (can_t_x > rect3[0].x - 1.0f && can_t_y < 8.0f) { can_t_x = 79.0f, x_pos = 79.0f; }
+    if (can_t_x > rect3[2].x - 1.0f && can_t_y >= 8.0f) { can_t_x = 83.0f, x_pos = 83.0f; }
+    //if ((can_t_x - 1.0f > rect4[2].x && can_t_x - 1.0f < rect4[2].x+0.01f)&& ( (can_t_y + 1.0f < 15.0f && can_t_y + 1.0f > 13.0f) || (can_t_y - 1.0f < 14.9f && can_t_y - 1.0f > 13.0f) )) { can_t_x = 71.0f, x_pos = 71.0f; }
    
     if (jump_button)
     {
-        if (can_t_y <= min_jump + 12.5f)
+        if (can_t_y <= min_jump + 11.0f)
             can_t_y += jump_y_vec;
         else jump_button = false;
     }
-    else if (coilision(can_t_y - 2.0f, rect2[0].y)) { can_t_y = 0.4f, min_jump = 0.0f; }
-    else if (can_t_x > 77.0f && can_t_x < 80.0f && coilision(can_t_y, rect3[0].y)) { can_t_y += 0.0f, min_jump = 11.0f; }
-    else can_t_y -= 0.2f;
+    else if (coilision(can_t_y, rect2[0].y)) { can_t_y =0.0f, min_jump = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 8.0f; }
+    else if (can_t_x<71.0f && can_t_x>0.0f && can_t_y>=15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
+    //else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 10.0f; }
+    else can_t_y -= 0.4f;
 
     Block_speed += block_vec;
     if (Block_speed >= 28.0f || Block_speed<=0.0f)
@@ -667,7 +714,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f,0.0f,5.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
@@ -690,7 +737,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
@@ -716,8 +763,19 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(3.0f, 5.0f, 5.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 25.0f, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Green.r, Green.g, Green.b);
+
+    glBindVertexArray(vao[6]);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(-1.9f, 23.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -727,6 +785,17 @@ GLvoid DrawMap()
 
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 5.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Green.r, Green.g, Green.b);
+
+    glBindVertexArray(vao[7]);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
     
     // 3Ãþ
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
@@ -954,7 +1023,7 @@ GLvoid DrawPlayer()
     unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(player_Color, Red.r, Red.g, Red.b);
     
-    glBindVertexArray(vao[0]);
+    glBindVertexArray(vao[1]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 }
 
