@@ -1065,7 +1065,11 @@ void Timerfunction(int value)
     }
     else if (coilision(can_t_y, rect2[0].y)) { can_t_y = 0.0f, min_jump = 0.0f; }
     else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 8.0f; }
+<<<<<<< HEAD
     else if (can_t_x < 71.0f && can_t_x>0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
+=======
+    else if (can_t_x<71.0f && can_t_x>0.0f && can_t_y>=15.0f && coilision(can_t_y, rect4[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
+>>>>>>> parent of 68714d1... 2층 계단 충돌
     //else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect3[0].y)) { can_t_y = 8.0f, min_jump = 10.0f; }
     else can_t_y -= 0.4f;
 
