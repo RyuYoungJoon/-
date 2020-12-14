@@ -4,7 +4,8 @@
 #include<windows.h>
 #include<vector>
 #include<math.h>
-
+#include<windows.h>
+#include<mmsystem.h>
 //#include<gl/glew.h>
 //#include<gl/freeglut.h> 
 //#include<gl/freeglut_ext.h> 
@@ -21,6 +22,7 @@
 #include "gtc/matrix_transform.hpp"
 //#include "myMap.h"
 #include "ReadObj.h"
+#pragma comment(lib,"winmm.lib")
 
 #define WIDTH 1500
 #define HEIGHT 900
@@ -524,7 +526,7 @@ void main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Example1");
-
+    PlaySound(L"¸Êºê±Ý.wav", 0, SND_FILENAME | SND_ASYNC);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
