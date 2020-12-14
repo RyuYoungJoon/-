@@ -1003,7 +1003,7 @@ GLvoid DrawObsRect()
 
 GLvoid DrawObsWheel()
 {
-
+    // 2Ãþ Àå¾Ö¹°
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 15.0f, 0.0f));
@@ -1039,8 +1039,7 @@ GLvoid DrawObsWheel()
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
-
-    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
+    // Àú¾î±â À§¿¡ Åé´Ï¹ÙÄû ¿Ô´Ù°¬´Ù
     T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x1, 93.0f, 2.5f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -1064,6 +1063,8 @@ GLvoid DrawObsWheel()
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
+
+    // ²À´ë±â Åé´Ï¹ÙÄû
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(5.0f, 138.0f, 0.0f));
 
