@@ -1249,6 +1249,7 @@ GLvoid DrawPlayer()
     glUniform3f(player_Color, Black.r, Black.g, Black.b);
     gluDisk(qobj, 0.0, 0.2, 20, 3);
 
+    int a = 0;
     if (can_t_x <= -3.f && can_t_y >= 143.f)
         exit(0);
 }
