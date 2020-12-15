@@ -22,6 +22,7 @@
 #include "gtc/matrix_transform.hpp"
 //#include "myMap.h"
 #include "ReadObj.h"
+#include "Sound.h"
 #pragma comment(lib,"winmm.lib")
 
 #define WIDTH 1500
@@ -41,6 +42,7 @@ void SpecialKeyboard(int key, int x, int y);
 void SpecialKeyboardup(int key, int x, int y);
 void Timerfunction(int);
 void Mouse(int button, int state, int x, int y);
+void soundplay();
 GLvoid DrawMap();
 GLvoid DrawPlayer();
 GLvoid DrawObsRect();
@@ -56,7 +58,7 @@ uniform_real_distribution<> random_pos_urd{ -20.0,20.0 };
 
 float random_xpos = random_pos_urd(dre);
 float random_zpos = random_pos_urd(dre);
-
+SOUND Sound;
 // 유영준 맵 작업용 카메라 좌표
 
 //float Camera_xPos = 0.0f;
@@ -128,8 +130,8 @@ float Down_Wheel6 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
 float Block_speed = 0.0f;
 
 // 캔 trans 좌표 변수
-float can_t_x = 0.0f;
-float can_t_y = 0.0f;
+float can_t_x = 70.0f;
+float can_t_y = 135.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
@@ -170,6 +172,10 @@ float rollwheel_y[10]{ 0, };
 float rollwheel_degree[10]{ 0, };
 float rollwheel_degree_vec = 3.5f;
 bool wheel_roll[10] = { true, false, false, false, false, false, false, false, false, false };
+bool sound = true;
+
+int bgsound = 0;
+int vicsound = 0;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -505,7 +511,6 @@ char* filetobuf(const char* file)
 
     return buf;
 }
-
 void main(int argc, char** argv)
 {
     srand((unsigned int)time(NULL));
@@ -515,7 +520,9 @@ void main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Example1");
-    //PlaySound(L"맵브금.wav", 0, SND_FILENAME | SND_ASYNC);
+    PlaySound(L"Machine_sound-Marianne_Gagnon-88253407", 0, SND_FILENAME | SND_ASYNC | SND_LOOP);
+   
+
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
@@ -531,6 +538,8 @@ void main(int argc, char** argv)
     }
     rollwheel_x[3] = 8.0f;
 
+    
+
     InitShader();
     InitBuffer();
 
@@ -544,6 +553,7 @@ void main(int argc, char** argv)
     glutSpecialFunc(SpecialKeyboard);
     glutSpecialUpFunc(SpecialKeyboardup);
     glutTimerFunc(1, Timerfunction, 1);
+    //soundplay();
     glutMainLoop();
 }
 
@@ -560,7 +570,7 @@ GLvoid drawScene()
 
     glm::mat4 LIGHT = glm::mat4(1.0f);
     qobj = gluNewQuadric();
-
+    
     if (one_cam)
     {
         Camera_xPos = can_t_x;
@@ -813,6 +823,7 @@ void SpecialKeyboard(int key, int x, int y)
     {
         lb = true;
         rb = false;
+        
     }
     if (key == GLUT_KEY_RIGHT)
     {
@@ -901,9 +912,26 @@ void Timerfunction(int value)
     else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 128.0f && coilision(can_t_y, rect_9wall[0].y)) { can_t_y = 128.0f, y_pos = 128.0f, min_jump = 128.0f, camera_rt = 180.0f; }
 
     else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 135.0f && coilision(can_t_y, rect_10floor[0].y)) { can_t_y = 135.0f, y_pos = 135.0f, min_jump = 135.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) { can_t_y = 143.0f, y_pos = 143.0f, min_jump = 143.0f, one_cam = false, thrid_cam = true; }
-
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) 
+    {
+        can_t_y = 143.0f;
+        y_pos = 143.0f;
+        min_jump = 143.0f;
+        one_cam = false;
+        thrid_cam = true;
+        //Sound.PlayerVictory();
+        
+    }
     else can_t_y -= 0.3f, y_pos -= 0.3f;
+    
+    
+    if (can_t_x <= -2.0f && can_t_y >= 143) {
+        can_t_y += 1.0f;
+        y_pos += 1.0f;
+        vicsound += 1;
+    }
+    if (vicsound == 1)
+        Sound.PlayerVictory();
 
     Block_speed += block_vec;
     if (Block_speed >= 28.0f || Block_speed <= 0.0f)
@@ -941,12 +969,15 @@ void Timerfunction(int value)
     //light_g -= light_vec;
     //light_b -= light_vec;
 
+  
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
 
 GLvoid DrawMap()
 {
+    
+
     // 경로
     // 1층 계단
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
@@ -1249,9 +1280,7 @@ GLvoid DrawPlayer()
     glUniform3f(player_Color, Black.r, Black.g, Black.b);
     gluDisk(qobj, 0.0, 0.2, 20, 3);
 
-    int a = 0;
-    if (can_t_x <= -3.f && can_t_y >= 143.f)
-        exit(0);
+
 }
 
 GLvoid DrawObsRect()
@@ -1409,3 +1438,4 @@ bool coilision(float can_y, float path_y)
     if (dis <= 0) return true;
     else return false;
 }
+
