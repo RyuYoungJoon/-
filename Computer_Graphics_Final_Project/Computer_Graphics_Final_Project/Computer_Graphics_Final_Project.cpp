@@ -526,7 +526,7 @@ void main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Example1");
-    PlaySound(L"¸Êºê±Ý.wav", 0, SND_FILENAME | SND_ASYNC);
+    //PlaySound(L"¸Êºê±Ý.wav", 0, SND_FILENAME | SND_ASYNC);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
@@ -1212,6 +1212,9 @@ GLvoid DrawPlayer()
 
     glBindVertexArray(vao[1]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+
+    if (can_t_x <= -3.f && can_t_y >= 143.f)
+        exit(0);
 }
 
 GLvoid DrawObsRect()

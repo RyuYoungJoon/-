@@ -18,14 +18,8 @@
     <ClCompile Include="Computer_Graphics_Final_Project.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="myMap.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="myMap.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="ReadObj.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
