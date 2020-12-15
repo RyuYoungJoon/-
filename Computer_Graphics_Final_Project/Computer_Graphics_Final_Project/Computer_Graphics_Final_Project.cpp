@@ -60,7 +60,7 @@ float random_zpos = random_pos_urd(dre);
 
 
 SOUND Sound;
-// 유영준 맵 작업용 카메라 좌표
+// ������ �� �۾��� ī�޶� ��ǥ
 
 //float Camera_xPos = 0.0f;
 //float Camera_yPos = 15.0f;
@@ -77,7 +77,7 @@ SOUND Sound;
 //float degree = 90.0f;
 
 
-// 홍태현 실린더 움직임 작업용 카메라 좌표
+// ȫ���� �Ǹ��� ������ �۾��� ī�޶� ��ǥ
 float Camera_xPos = 0.0f;
 float Camera_yPos = 0.0f;
 float Camera_zPos = 0.0f;
@@ -90,9 +90,6 @@ float x_pos = 0.0f;
 float y_pos = 0.0f;
 float z_pos = 20.0f;
 
-bool one_cam = false;
-bool thrid_cam = true;
-
 float cam_y_dis = 1.0f;
 
 float degree = 90.0f;
@@ -101,10 +98,10 @@ float degree_vec = 2.0f;
 float camera_rt = 0.0f;
 float camera_rt_vec = 10.0f;
 
-// 어떤 변수인지 적어놔줘 
-float Open_Ground = 0.0f;           // 바닥 움직이게 만드는 변수
+// � �������� ������� 
+float Open_Ground = 0.0f;           // �ٴ� �����̰� ����� ����
 float Proj_degree = 100.0f;
-float Wheel_R = 0.0f;               // 톱니바퀴 회전 변수
+float Wheel_R = 0.0f;               // ��Ϲ��� ȸ�� ����
 
 float light_x = -15.0;
 float light_y = 15.0;
@@ -114,34 +111,35 @@ float light_r = 1.0;
 float light_g = 1.0;
 float light_b = 1.0;
 
+
 bool Open_mode = true;
 bool Down_node = true;
 
-float rad = 1.0f;
+float rad = 30.0f;
 
-float Down_Wheel = 0.0f;        // 톱니바퀴 떨어지는 첫번째 구간
-float Down_Wheel2 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
-float Down_Wheel3 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
-float Down_Wheel4 = 0.0f;        // 톱니바퀴 떨어지는 첫번째 구간
-float Down_Wheel5 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
-float Down_Wheel6 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
+float Down_Wheel = 0.0f;        // ��Ϲ��� �������� ù��° ����
+float Down_Wheel2 = 0.0f;       // ��Ϲ��� �������� �ι�° ����
+float Down_Wheel3 = 0.0f;       // ��Ϲ��� �������� �ι�° ����
+float Down_Wheel4 = 0.0f;        // ��Ϲ��� �������� ù��° ����
+float Down_Wheel5 = 0.0f;       // ��Ϲ��� �������� �ι�° ����
+float Down_Wheel6 = 0.0f;       // ��Ϲ��� �������� �ι�° ����
 
 
-// 블럭 스피드
+// ��� ���ǵ�
 float Block_speed = 0.0f;
 
-// 캔 trans 좌표 변수
-float can_t_x = 0.0f;
-float can_t_y = 0.0f;
+// ĵ trans ��ǥ ����
+float can_t_x = 50.0f;
+float can_t_y = 45.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
-// 캔의 x, y ,z 속도 벡터
+// ĵ�� x, y ,z �ӵ� ����
 float can_x_vec = 0.05f;
 float can_y_vec = 0.0f;
 float can_z_vec = 0.1f;
 
-// 캔의 x, y, z 회전률 
+// ĵ�� x, y, z ȸ���� 
 float can_x_rt = 10.0f;
 float can_y_rt = 10.0f;
 float can_z_rt = 30.0f;
@@ -153,7 +151,7 @@ float can_rotate = 0.0f;
 float min_jump = 0.0f;
 float jump_y_vec = 0.3f;
 
-// 마우스 불 변수
+// ���콺 �� ����
 bool mouse_botton;
 bool jump_button;
 int jump_cnt = 0;
@@ -166,6 +164,8 @@ float Wheel_t_x2 = 10.0f;
 float Wheel_vec = 0.3f;
 float light_vec = 0.0001f;
 
+//float rollwheel_x = 5.0f;
+//float rollwheel_y = 138.0f;
 float rollvec = 0.2f;
 
 float rollwheel_x[10]{ 0, };
@@ -221,7 +221,7 @@ figure rect1[] =
     2.0f,141.0f,0.0f,1.0f,1.0f,1.0f
 };
 
-// 1층 바닥
+// 1�� �ٴ�
 figure rect_1floor[] =
 {
     0.0f, 0.0f,0.0f,1.0f,1.0f,1.0f,
@@ -233,7 +233,7 @@ figure rect_1floor[] =
     0.0f,0.0f,0.0f,1.0f,1.0f,1.0f
 };
 
-// 1층 계단
+// 1�� ���
 figure rect_1wall[] =
 {
     80.0f, 8.0f,0.0f,1.0f,1.0f,1.0f,
@@ -245,7 +245,7 @@ figure rect_1wall[] =
     80.0f, 8.0f,0.0f,1.0f,1.0f,1.0f
 };
 
-// 2층 바닥
+// 2�� �ٴ�
 figure rect_2floor[] =
 {
     0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f,
@@ -257,7 +257,7 @@ figure rect_2floor[] =
     0.0f, 15.0f,0.0f,1.0f,1.0f,1.0f
 };
 
-// 2층 계단
+// 2�� ���
 figure rect_2wall[] =
 {
     -4.0f, 23.0f,0.0f,1.0f,1.0f,1.0f,
@@ -278,6 +278,7 @@ figure rect_10floor[] =
     70.0f, 133.0f,0.0f,1.0f,1.0f,1.0f,
     70.0f, 135.0f,0.0f,1.0f,1.0f,1.0f,
     0.0f, 135.0f,0.0f,1.0f,1.0f,1.0f
+
 };
 
 figure rect_10wall[] =
@@ -289,6 +290,9 @@ figure rect_10wall[] =
     0.0f, 135.0f,0.0f,1.0f,1.0f,1.0f,
     0.0f, 143.0f,0.0f,1.0f,1.0f,1.0f,
     -4.0f, 143.0f,0.0f,1.0f,1.0f,1.0f
+
+
+
 };
 
 figure rect_9floor[] =
@@ -300,6 +304,7 @@ figure rect_9floor[] =
     80.0f, 118.0f,0.0f,1.0f,1.0f,1.0f,
     80.0f, 120.0f,0.0f,1.0f,1.0f,1.0f,
     10.0f, 120.0f,0.0f,1.0f,1.0f,1.0f
+
 };
 
 figure rect_9wall[] =
@@ -311,6 +316,8 @@ figure rect_9wall[] =
     84.0f, 120.0f,0.0f,1.0f,1.0f,1.0f,
     84.0f, 128.0f,0.0f,1.0f,1.0f,1.0f,
     80.0f, 128.0f,0.0f,1.0f,1.0f,1.0f
+
+
 };
 
 figure rect_8floor[] =
@@ -367,6 +374,9 @@ figure rect_6floor[] =
     70.0f, 73.0f,0.0f,1.0f,1.0f,1.0f,
     70.0f, 75.0f,0.0f,1.0f,1.0f,1.0f,
     0.0f, 75.0f,0.0f,1.0f,1.0f,1.0f
+
+
+
 };
 
 figure rect_6wall[] =
@@ -518,7 +528,7 @@ void main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Example1");
-    //PlaySound(L"맵브금.wav", 0, SND_FILENAME | SND_ASYNC);
+    //PlaySound(L"�ʺ��.wav", 0, SND_FILENAME | SND_ASYNC);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
@@ -561,15 +571,14 @@ GLvoid drawScene()
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    glm::mat4 LIGHT = glm::mat4(1.0f);
     qobj = gluNewQuadric();
 
-    if (one_cam)
+    if(one_cam)
     {
-        Camera_xPos = can_t_x;
-        Camera_yPos = can_t_y + 2.0f;
+        Camera_xPos = can_t_x + 1.0f;
+        Camera_yPos = can_t_y + 3.0f;
         Camera_zPos = can_t_z;
-        Camera_xAT = can_t_x + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
+        Camera_xAT = can_t_x + 1.0f + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
         Camera_yAT = can_t_y + 2.0f;
         Camera_zAT = can_t_z + glm::cos(glm::radians(float(camera_rt + 90.0f))) * rad;
 
@@ -581,24 +590,25 @@ GLvoid drawScene()
         GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
         glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
     }
+
     if (thrid_cam)
     {
         Camera_xPos = x_pos;
         Camera_yPos = y_pos + 10.0f;
-        Camera_zPos = z_pos;
+        Camera_zPos = 30.0f;
         Camera_xAT = x_pos;
         Camera_yAT = y_pos;
         Camera_zAT = 0.0f;
 
-        glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
-        glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
-        glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
+    glm::mat4 CAMERA_ROTATE = glm::rotate(glm::mat4(1.0f), float(glm::radians(camera_rt)), glm::vec3(1.0, 0.0, 0.0));
+    glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
+    glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
+    glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
 
-        glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
-        GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
-        glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
-    }
+    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup) * CAMERA_ROTATE;
 
+    GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
+    glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
 
     glm::mat4 projection = glm::mat4(1.0f);
     projection = glm::perspective(glm::radians(Proj_degree), (float)WIDTH / (float)HEIGHT, 0.1f, 1000.0f);
@@ -653,7 +663,7 @@ void make_vertexshader()
     if (!result)
     {
         glGetShaderInfoLog(vertexshader, 512, NULL, errorLog);
-        std::cerr << "ERROR : vertex shader 컴파일 실패\n " << errorLog << std::endl;
+        std::cerr << "ERROR : vertex shader ������ ����\n " << errorLog << std::endl;
         return;
     }
 }
@@ -672,7 +682,7 @@ void make_fragmentshader()
     if (!result)
     {
         glGetShaderInfoLog(fragmentshader, 512, NULL, errorLog);
-        std::cerr << "ERROR : vertex shader 컴파일 실패\n " << errorLog << std::endl;
+        std::cerr << "ERROR : vertex shader ������ ����\n " << errorLog << std::endl;
         return;
     }
 }
@@ -682,7 +692,7 @@ void InitBuffer()
     glGenVertexArrays(6, vao);
     glGenBuffers(6, vbo);
 
-    // 육면체
+    // ����ü
     glBindVertexArray(vao[0]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
@@ -701,7 +711,7 @@ void InitBuffer()
 
     glEnableVertexAttribArray(1);
 
-    // 플레이어
+    // �÷��̾�
     glBindVertexArray(vao[1]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
@@ -720,7 +730,7 @@ void InitBuffer()
 
     glEnableVertexAttribArray(1);
 
-    // 톱니바퀴
+    // ��Ϲ���
     glBindVertexArray(vao[2]);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[4]);
@@ -764,43 +774,42 @@ void Keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    case 'x':
-        x_pos -= 2.0f;
-        Camera_xAT -= 2.0f;
-        break;
-    case 'X':
-        x_pos += 2.0f;
-        Camera_xAT += 2.0f;
-        break;
-    case 'y':
-        y_pos -= 2.f;
-        Camera_yAT -= 2.0f;
-        break;
-    case 'Y':
-        y_pos += 2.0f;
-        Camera_yAT += 2.0f;
-        break;
-    case 'z':
-        z_pos -= 2.0f;
-        Camera_zAT -= 2.0f;
-        break;
-    case 'Z':
-        z_pos += 2.0f;
-        Camera_zAT += 2.0f;
-        break;
-    case 'r':
-        degree += 2.0;
-        break;
-    case 'R':
-        degree -= 2.0;
-        break;
+    //case 'x':
+    //    x_pos -= 2.0f;
+    //    Camera_xAT -= 2.0f;
+    //    break;
+    //case 'X':
+    //    x_pos += 2.0f;
+    //    Camera_xAT += 2.0f;
+    //    break;
+    //case 'y':
+    //    y_pos -= 2.f;
+    //    Camera_yAT -= 2.0f;
+    //    break;
+    //case 'Y':
+    //    y_pos += 2.0f;
+    //    Camera_yAT += 2.0f;
+    //    break;
+    //case 'z':
+    //    z_pos -= 2.0f;
+    //    Camera_zAT -= 2.0f;
+    //    break;
+    //case 'Z':
+    //    z_pos += 2.0f;
+    //    Camera_zAT += 2.0f;
+    //    break;
+    //case 'r':
+    //    degree += 2.0;
+    //    break;
+    //case 'R':
+    //    degree -= 2.0;
+    //    break;
     case 'c':
         one_cam = true;
         thrid_cam = false;
         break;
-    case 'C':
-        one_cam = false;
-        thrid_cam = true;
+    case 'R':
+        degree -= 2.0;
         break;
     case 32:
         if (can_t_y <= min_jump)jump_button = true;
@@ -869,44 +878,44 @@ void Timerfunction(int value)
 
     //if ((can_t_x - 1.0f > rect4[2].x && can_t_x - 1.0f < rect4[2].x+0.01f)&& ( (can_t_y + 1.0f < 15.0f && can_t_y + 1.0f > 13.0f) || (can_t_y - 1.0f < 14.9f && can_t_y - 1.0f > 13.0f) )) { can_t_x = 71.0f, x_pos = 71.0f; }
 
-    if (jump_button)
+    if (jump_button )
     {
-        if (can_t_y <= min_jump + 10.0f)
+        if (can_t_y <= min_jump + 11.0f)
             can_t_y += jump_y_vec, y_pos += 0.3f;
         else jump_button = false;
     }
 
-    else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, y_pos = 0.0f, min_jump = 0.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect_1wall[0].y)) { can_t_y = 8.0f, y_pos = 8.0f, min_jump = 8.0f, camera_rt = 180.0f; }
+    else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, min_jump = 0.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect_1wall[0].y)) { can_t_y = 8.0f, min_jump = 8.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, y_pos = 15.0f, min_jump = 15.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect_2wall[0].y)) { can_t_y = 23.0f, y_pos = 23.0f, min_jump = 23.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, min_jump = 15.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect_2wall[0].y)) { can_t_y = 23.0f, min_jump = 23.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 30.0f && coilision(can_t_y, rect_3floor[0].y)) { can_t_y = 30.0f, y_pos = 30.0f, min_jump = 30.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 38.0f && coilision(can_t_y, rect_3wall[0].y)) { can_t_y = 38.0f, y_pos = 38.0f, min_jump = 38.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 30.0f && coilision(can_t_y, rect_3floor[0].y)) { can_t_y = 30.0f, min_jump = 30.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 38.0f && coilision(can_t_y, rect_3wall[0].y)) { can_t_y = 38.0f, min_jump = 38.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 45.0f && coilision(can_t_y, rect_4floor[0].y)) { can_t_y = 45.0f, y_pos = 45.0f, min_jump = 45.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 53.0f && coilision(can_t_y, rect_4wall[0].y)) { can_t_y = 53.0f, y_pos = 53.0f, min_jump = 53.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 45.0f && coilision(can_t_y, rect_4floor[0].y)) { can_t_y = 45.0f, min_jump = 45.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 53.0f && coilision(can_t_y, rect_4wall[0].y)) { can_t_y = 53.0f, min_jump = 53.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 60.0f && coilision(can_t_y, rect_5floor[0].y)) { can_t_y = 60.0f, y_pos = 60.0f, min_jump = 60.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 68.0f && coilision(can_t_y, rect_5wall[0].y)) { can_t_y = 68.0f, y_pos = 68.0f, min_jump = 68.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 60.0f && coilision(can_t_y, rect_5floor[0].y)) { can_t_y = 60.0f, min_jump = 60.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 68.0f && coilision(can_t_y, rect_5wall[0].y)) { can_t_y = 68.0f, min_jump = 68.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 75.0f && coilision(can_t_y, rect_6floor[0].y)) { can_t_y = 75.0f, y_pos = 75.0f, min_jump = 75.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 83.0f && coilision(can_t_y, rect_6wall[0].y)) { can_t_y = 83.0f, y_pos = 83.0f, min_jump = 83.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 75.0f && coilision(can_t_y, rect_6floor[0].y)) { can_t_y = 75.0f, min_jump = 75.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 83.0f && coilision(can_t_y, rect_6wall[0].y)) { can_t_y = 83.0f, min_jump = 83.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 90.0f && coilision(can_t_y, rect_7floor[0].y)) { can_t_y = 90.0f, y_pos = 90.0f, min_jump = 90.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 98.0f && coilision(can_t_y, rect_7wall[0].y)) { can_t_y = 98.0f, y_pos = 98.0f, min_jump = 98.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 90.0f && coilision(can_t_y, rect_7floor[0].y)) { can_t_y = 90.0f, min_jump = 90.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 98.0f && coilision(can_t_y, rect_7wall[0].y)) { can_t_y = 98.0f, min_jump = 98.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 105.0f && coilision(can_t_y, rect_8floor[0].y)) { can_t_y = 105.0f, y_pos = 105.0f, min_jump = 105.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 113.0f && coilision(can_t_y, rect_8wall[0].y)) { can_t_y = 113.0f, y_pos = 113.0f, min_jump = 113.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 105.0f && coilision(can_t_y, rect_8floor[0].y)) { can_t_y = 105.0f, min_jump = 105.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 113.0f && coilision(can_t_y, rect_8wall[0].y)) { can_t_y = 113.0f, min_jump = 113.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 120.0f && coilision(can_t_y, rect_9floor[0].y)) { can_t_y = 120.0f, y_pos = 120.0f, min_jump = 120.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 128.0f && coilision(can_t_y, rect_9wall[0].y)) { can_t_y = 128.0f, y_pos = 128.0f, min_jump = 128.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 120.0f && coilision(can_t_y, rect_9floor[0].y)) { can_t_y = 120.0f, min_jump = 120.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 128.0f && coilision(can_t_y, rect_9wall[0].y)) { can_t_y = 128.0f, min_jump = 128.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 135.0f && coilision(can_t_y, rect_10floor[0].y)) { can_t_y = 135.0f, y_pos = 135.0f, min_jump = 135.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) { can_t_y = 143.0f, y_pos = 143.0f, min_jump = 143.0f, one_cam = false, thrid_cam = true; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 135.0f && coilision(can_t_y, rect_10floor[0].y)) { can_t_y = 135.0f, min_jump = 135.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) { can_t_y = 143.0f, min_jump = 143.0f, one_cam = false, thrid_cam = true; }
 
-    else can_t_y -= 0.3f, y_pos -= 0.3f;
+    else can_t_y -= 0.4f, y_pos -= 0.3f;
 
     Block_speed += block_vec;
     if (Block_speed >= 28.0f || Block_speed <= 0.0f)
@@ -950,9 +959,9 @@ void Timerfunction(int value)
 
 GLvoid DrawMap()
 {
-    // 경로
-    // 1층 계단
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    // ���
+    // 1�� ���
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 8.0f, 0.0f));
 
     unsigned int path = glGetUniformLocation(s_program[0], "Transform");
@@ -964,8 +973,8 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 2층 계단
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
+    // 2�� ���
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 4.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(-1.9f, 23.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -977,7 +986,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 3층 계단
+    // 3�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 38.0f, 0.0f));
 
@@ -990,7 +999,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 4층 계단
+    // 4�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 53.0f, 0.0f));
 
@@ -1003,7 +1012,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 5층 계단
+    // 5�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 68.0f, 0.0f));
 
@@ -1016,7 +1025,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 6층 계단
+    // 6�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 83.0f, 0.0f));
 
@@ -1029,7 +1038,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 7층 계단
+    // 7�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 98.0f, 0.0f));
 
@@ -1042,7 +1051,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 8층 계단
+    // 8�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 113.0f, 0.0f));
 
@@ -1055,7 +1064,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 9층 계단
+    // 9�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(83.0f - 1.0f, 128.0f, 0.0f));
 
@@ -1068,7 +1077,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 10층 계단
+    // 10�� ���
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(-3.0f + 1.0f, 143.0f, 0.0f));
 
@@ -1083,7 +1092,7 @@ GLvoid DrawMap()
 
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    // 1층 바닥
+    // 1�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(40.0, 1.0, 5.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0, 0.0, 0.0));
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -1095,7 +1104,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 2층 바닥
+    // 2�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 15.0f, 0.0f));
 
@@ -1109,7 +1118,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 3층 바닥
+    // 3�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 30.0f, 0.0f));
 
@@ -1123,7 +1132,7 @@ GLvoid DrawMap()
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
 
-    // 4층 바닥
+    // 4�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 45.0f, 0.0f));
 
@@ -1137,7 +1146,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 5층 바닥
+    // 5�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 60.0f, 0.0f));
 
@@ -1151,7 +1160,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 6층 바닥
+    // 6�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 75.0f, 0.0f));
 
@@ -1165,7 +1174,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 7층 바닥
+    // 7�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 90.0f, 0.0f));
 
@@ -1178,7 +1187,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 8층 바닥
+    // 8�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 105.0f, 0.0f));
 
@@ -1191,7 +1200,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 9층 바닥
+    // 9�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(45.0f, 120.0f, 0.0f));
 
@@ -1204,7 +1213,7 @@ GLvoid DrawMap()
     glBindVertexArray(vao[0]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    // 10층 바닥
+    // 10�� �ٴ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(35.0f, 1.0f, 5.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(35.0f, 135.0f, 0.0f));
 
@@ -1304,7 +1313,7 @@ GLvoid DrawObsRect()
 
 GLvoid DrawObsWheel()
 {
-    // 2층 장애물
+    // 2�� ��ֹ�
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 15.0f, 0.0f));
@@ -1340,7 +1349,7 @@ GLvoid DrawObsWheel()
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
-    // 저어기 위에 톱니바퀴 왔다갔다
+    // ����� ���� ��Ϲ��� �Դٰ���
     T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x1, 93.0f, 2.5f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -1365,7 +1374,7 @@ GLvoid DrawObsWheel()
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
 
-    // 꼭대기 톱니바퀴
+    // ����� ��Ϲ���
     for (int i = 0; i < 10; ++i)
     {
         if (wheel_roll[i] == true)
@@ -1384,7 +1393,7 @@ GLvoid DrawObsWheel()
             glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
         }
     }
-    //박스
+    //�ڽ�
     T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0f, 0.0f));
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T));
