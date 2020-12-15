@@ -919,9 +919,9 @@ void Timerfunction(int value)
             rollwheel_x[i] += rollvec;
         }
     }
-    light_r -= light_vec * 2.0f;
-    light_g -= light_vec * 2.0f;
-    light_b -= light_vec * 2.0f;
+    light_r -= light_vec;
+    light_g -= light_vec;
+    light_b -= light_vec;
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
