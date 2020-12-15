@@ -40,8 +40,6 @@ void Keyboard(unsigned char, int, int);
 void SpecialKeyboard(int key, int x, int y);
 void SpecialKeyboardup(int key, int x, int y);
 void Timerfunction(int);
-void Mouse(int button, int state, int x, int y);
-void soundplay();
 bool coilsion_obs(float x, float y, float z, float can_x, float can_y, float can_z, float dist);
 GLvoid DrawMap();
 GLvoid DrawPlayer();
@@ -51,13 +49,6 @@ GLchar* vertexsource, * fragmentsource;
 GLuint vertexshader, fragmentshader;
 GLuint s_program[3];
 GLUquadricObj* qobj;
-
-random_device rd;
-default_random_engine dre{ rd() };
-uniform_real_distribution<> random_pos_urd{ -20.0,20.0 };
-
-float random_xpos = random_pos_urd(dre);
-float random_zpos = random_pos_urd(dre);
 
 // 유영준 맵 작업용 카메라 좌표
 
@@ -492,8 +483,6 @@ std::vector< glm::vec2 > wheel_uvs;
 std::vector< glm::vec3 > wheel_normals;
 
 bool res_cube = loadOBJ("cube.obj", cube_vertices, cube_uvs, cube_normals);
-bool res_player = loadOBJ("can.obj", player_vertices, player_uvs, player_normals);
-bool res_pyramid = loadOBJ("pyramid.obj", pyramid_vertices, pyramid_uvs, pyramid_normals);
 bool res_wheel = loadOBJ("top.obj", wheel_vertices, wheel_uvs, wheel_normals);
 
 char* filetobuf(const char* file)
@@ -556,7 +545,6 @@ void main(int argc, char** argv)
     glutSpecialFunc(SpecialKeyboard);
     glutSpecialUpFunc(SpecialKeyboardup);
     glutTimerFunc(1, Timerfunction, 1);
-    //soundplay();
     glutMainLoop();
 }
 
@@ -711,24 +699,6 @@ void InitBuffer()
 
     glEnableVertexAttribArray(1);
 
-    // 플레이어
-    glBindVertexArray(vao[1]);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[2]);
-
-    glBufferData(GL_ARRAY_BUFFER, player_vertices.size() * sizeof(glm::vec3), &player_vertices[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glEnableVertexAttribArray(0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo[3]);
-
-    glBufferData(GL_ARRAY_BUFFER, player_normals.size() * sizeof(glm::vec3), &player_normals[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-    glEnableVertexAttribArray(1);
 
     // 톱니바퀴
     glBindVertexArray(vao[2]);
@@ -993,9 +963,6 @@ void Timerfunction(int value)
     {
         PlaySound(L"y2mate.com - 어몽어스 사보타지 (효과음) (online-audio-converter.com).wav", 0, SND_FILENAME | SND_ASYNC );
     }
-
-
-
 
     //cout << light_r << endl;
 
@@ -1299,19 +1266,27 @@ GLvoid DrawPlayer()
     qobj = gluNewQuadric();
 
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
-    Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y, can_t_z));
+    Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(0.0f)), glm::vec3(0.0, 1.0, 0.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y+1.0f, can_t_z));
     unsigned int player = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Ry * S));
     unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(player_Color, Red.r, Red.g, Red.b);
 
-    glBindVertexArray(vao[1]);
-    glDrawArrays(GL_TRIANGLES, 0, player_vertices.size());
+    gluCylinder(qobj, 1.0f, 1.0f, 2.0f, 20, 20);
+    /*glBindVertexArray(vao[1]);
+    glDrawArrays(GL_TRIANGLES, 0, player_vertices.size());*/
+
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 2.0f));
+    player = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Rz));
+    player_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(player_Color, Red.r, Red.g, Red.b);
+    gluDisk(qobj, 0.0, 1.0f, 20, 3);
 
     //Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt - 90.0f)), glm::vec3(0.0, 1.0, 0.0));
     Rz = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rotate)), glm::vec3(0.0, 0.0, 1.0));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 1.1f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 2.05f));
     player = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Rz));
     player_Color = glGetUniformLocation(s_program[1], "in_Color");
@@ -1319,14 +1294,12 @@ GLvoid DrawPlayer()
     gluDisk(qobj, 0.0, 0.73, 20, 3);
 
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 1.15f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 2.06f));
     player = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
     player_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(player_Color, Black.r, Black.g, Black.b);
     gluDisk(qobj, 0.0, 0.2, 20, 3);
-
-
 }
 
 GLvoid DrawObsRect()
@@ -1345,32 +1318,6 @@ GLvoid DrawObsRect()
         glBindVertexArray(vao[0]);
         glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
     }
-
-    /*S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 60.0f - Block_speed, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
-
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(55.0f, 60.0f - Block_speed, 0.0f));
-
-    path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
-
-    path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
-
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());*/
 }
 
 GLvoid DrawObsWheel()
