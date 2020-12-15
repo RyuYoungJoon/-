@@ -43,6 +43,7 @@ void SpecialKeyboardup(int key, int x, int y);
 void Timerfunction(int);
 void Mouse(int button, int state, int x, int y);
 void soundplay();
+bool coilsion_obs(float x, float y, float z, float can_x, float can_y, float can_z, float dist);
 GLvoid DrawMap();
 GLvoid DrawPlayer();
 GLvoid DrawObsRect();
@@ -85,8 +86,8 @@ float Camera_xAT = 0.0f;
 float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
-float x_pos = 0.0f;
-float y_pos = 0.0f;
+float x_pos = 10.0f;
+float y_pos = 60.0f;
 float z_pos = 20.0f;
 
 bool one_cam = false;
@@ -127,17 +128,19 @@ float Down_Wheel6 = 0.0f;       // 톱니바퀴 떨어지는 두번째 구간
 
 
 // 블럭 스피드
-float Block_speed = 0.0f;
+float block_x[3] = { 15.0f,35.0f,55.0f };
+float block_y[3] = { 58.0f,33.0f,48.0f };
+float block_vec[3] = { 0.3f,0.5f,0.2f };
 
 // 캔 trans 좌표 변수
-float can_t_x = 70.0f;
-float can_t_y = 135.0f;
+float can_t_x = 10.0f;
+float can_t_y = 60.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
 // 캔의 x, y ,z 속도 벡터
-float can_x_vec = 0.05f;
-float can_y_vec = 0.0f;
+float can_x_vec = 0.25f;
+float can_y_vec = 0.25f;
 float can_z_vec = 0.1f;
 
 // 캔의 x, y, z 회전률 
@@ -157,11 +160,12 @@ bool mouse_botton;
 bool jump_button;
 int jump_cnt = 0;
 
-float block_vec = 0.2f;
 float wheel_degree = 0.0f;
 float wheel_degree_vec = 3.5f;
+float wheel_t_x[3] = { 75.0f,3.0f,75.0f };
+float wheel_vec[3] = { 0.3f, 0.4f, 0.5f };
 float Wheel_t_x1 = 75.0f;
-float Wheel_t_x2 = 10.0f;
+float Wheel_t_x2 = 3.0f;
 float Wheel_vec = 0.3f;
 float light_vec = 0.0001f;
 
@@ -534,7 +538,7 @@ void main(int argc, char** argv)
     for (int i = 0; i < 10; ++i)
     {
         rollwheel_x[i] = 5.0f;
-        rollwheel_y[i] = 138.0f;
+        rollwheel_y[i] = 148.0f;
     }
     rollwheel_x[3] = 8.0f;
 
@@ -848,9 +852,8 @@ void SpecialKeyboardup(int key, int x, int y)
 
 void Timerfunction(int value)
 {
-    if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25, can_rotate += 5.0f; }
-    if (rb == true) { can_t_x += 0.25, x_pos += 0.25, can_rotate -= 5.0f; }
-
+    if (lb == true) { can_t_x -= can_x_vec, x_pos -= can_x_vec, can_rotate += 5.0f; }
+    if (rb == true) { can_t_x += can_x_vec, x_pos += can_x_vec, can_rotate -= 5.0f; }
     if (can_t_x < 0.0f && can_t_y <= 13.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
 
     if (can_t_x > rect_1wall[0].x - 1.0f && can_t_y >= 0 && can_t_y < 8.0f) { can_t_x = 79.0f, x_pos = 79.0f; }
@@ -918,9 +921,7 @@ void Timerfunction(int value)
         y_pos = 143.0f;
         min_jump = 143.0f;
         one_cam = false;
-        thrid_cam = true;
-        //Sound.PlayerVictory();
-        
+        thrid_cam = true;        
     }
     else can_t_y -= 0.3f, y_pos -= 0.3f;
     
@@ -933,14 +934,28 @@ void Timerfunction(int value)
     if (vicsound == 1)
         Sound.PlayerVictory();
 
-    Block_speed += block_vec;
-    if (Block_speed >= 28.0f || Block_speed <= 0.0f)
-        block_vec *= -1;
 
-    wheel_degree += wheel_degree_vec;
+    //Block_speed += block_vec;
+    //if (Block_speed >= 28.0f || Block_speed <= 0.0f)
+    //    block_vec *= -1;
 
-    Wheel_t_x1 -= Wheel_vec;
-    Wheel_t_x2 += Wheel_vec;
+    block_y[0] -= block_vec[0];
+    block_y[1] += block_vec[1] * 0.5f;
+    block_y[2] += block_vec[2];
+    if (block_y[0] <= 34.0f || block_y[0]>=58.0f) block_vec[0] *= -1;
+    if (block_y[1] <= 33.0f || block_y[1] >= 58.0f) block_vec[1] *= -1;
+    if (block_y[2] <= 48.0f || block_y[2] >= 57.5f) block_vec[2] *= -1;
+
+    //wheel_degree += wheel_degree_vec;
+
+    wheel_t_x[0] -= wheel_vec[0];
+    wheel_t_x[1] += wheel_vec[1];
+    wheel_t_x[2] -= wheel_vec[2];
+    if (wheel_t_x[0] <= 10.0f || wheel_t_x[0] >= 76.0f) wheel_vec[0] *= -1;
+    if (wheel_t_x[1] <= 3.0f || wheel_t_x[1] >= 70.0f) wheel_vec[1] *= -1;
+    if (wheel_t_x[2] <= 10.0f || wheel_t_x[2] >= 76.0f) wheel_vec[2] *= -1;
+    //Wheel_t_x1 -= Wheel_vec * 2.5f;
+    //Wheel_t_x2 += Wheel_vec * 2.5f;
 
     if (Wheel_t_x1 >= 75.0f || Wheel_t_x1 <= 10.0f) { Wheel_vec *= -1, wheel_degree_vec *= -1; }
 
@@ -960,7 +975,7 @@ void Timerfunction(int value)
             else if (rollwheel_x[i] < 74.0f && rollwheel_x[i] > 0.0f && rollwheel_y[i] >= 45.0f && coilision(rollwheel_y[i] - 2.5f, rect_4floor[0].y)) { rollwheel_y[i] = 48.0f, rollvec = 0.2; }
             else if (rollwheel_x[i] < 79.0f && rollwheel_x[i] > 10.0f && rollwheel_y[i] >= 30.0f && coilision(rollwheel_y[i] - 2.5f, rect_3floor[0].y)) { rollwheel_y[i] = 33.0f, rollvec = -0.2; }
             else if (rollwheel_x[i] < 74.0f && rollwheel_x[i] > 0.0f && rollwheel_y[i] >= 15.0f && coilision(rollwheel_y[i] - 2.5f, rect_2floor[0].y)) { rollwheel_y[i] = 18.0f, rollvec = 0.2; }
-            else if (rollwheel_x[i] < 79.0f && rollwheel_x[i] > 10.0f && rollwheel_y[i] >= 0.0f && coilision(rollwheel_y[i] - 2.5f, rect_1floor[0].y)) { rollwheel_y[i] = 3.0f; wheel_roll[i] = false; }
+            else if (rollwheel_x[i] < 79.0f && rollwheel_x[i] > 10.0f && rollwheel_y[i] >= 0.0f && coilision(rollwheel_y[i] - 2.5f, rect_1floor[0].y)) { rollwheel_x[i]=100.0f, rollwheel_y[i] = 3.0f; wheel_roll[i] = false; }
             else rollwheel_y[i] -= 0.5f;
             rollwheel_x[i] += rollvec;
         }
@@ -969,15 +984,33 @@ void Timerfunction(int value)
     //light_g -= light_vec;
     //light_b -= light_vec;
 
-  
+    //cout << light_r << endl;
+
+    if (coilsion_obs(55.0f, 15.0f, 0.0f, can_t_x, can_t_y, can_t_z, 4.0)) { can_t_x += 10.0f, x_pos += 10.0f, can_t_y += 5.0f, y_pos += 5.0f; }
+    if (coilsion_obs(35.0f, 15.0f, 0.0f, can_t_x, can_t_y, can_t_z, 4.0)) { can_t_x += 10.0f, x_pos += 10.0f, can_t_y += 5.0f, y_pos += 5.0f; }
+    if (coilsion_obs(15.0f, 15.0f, 0.0f, can_t_x, can_t_y, can_t_z, 4.0)) { can_t_x += 10.0f, x_pos += 10.0f, can_t_y += 5.0f, y_pos += 5.0f; }
+    if (coilsion_obs(15.0f, block_y[0], 0.0f, can_t_x, can_t_y + 2.0f , can_t_z, 4.0)) { can_t_y = 15.0f, y_pos = 15.0f, min_jump = 15.0f; }
+    if (coilsion_obs(35.0f, block_y[1], 0.0f, can_t_x, can_t_y+2.0f, can_t_z, 4.0)) { can_t_y = 15.0f, y_pos = 15.0f, min_jump = 15.0f; }
+    if (coilsion_obs(55.0f, block_y[2], 0.0f, can_t_x, can_t_y+2.0f, can_t_z, 4.0)) { can_t_y = 30.0f, y_pos = 30.0f, min_jump = 30.0f;}
+    
+    for (int i = 0; i < 10; ++i)
+    {
+        if (coilsion_obs(rollwheel_x[i], rollwheel_y[i], 0.0f, can_t_x, can_t_y, can_t_z, 4.0))
+        {
+            if (can_t_x > rollwheel_x[i]) can_t_x += can_x_vec*2.0f, x_pos += can_x_vec*2.0f;
+            if (can_t_x < rollwheel_x[i])can_t_x -= can_x_vec*2.0f, x_pos -= can_x_vec*2.0f;
+        }
+    }
+
+    if (coilsion_obs(wheel_t_x[0], 93.0f, 0.0f, can_t_x, can_t_y + 1.0f, can_t_z, 4.0)) { can_t_x = -2.0f, x_pos = -2.0f, can_t_y = 83.0f, y_pos = 83.0f, min_jump = 83.0f; }
+    if (coilsion_obs(wheel_t_x[1], 108.0f, 0.0f, can_t_x, can_t_y + 1.0f, can_t_z, 4.0)) { can_t_x = 81.0f, x_pos = .0f, can_t_y = 98.0f, y_pos = 98.0f, min_jump = 98.0f; }
+    if (coilsion_obs(wheel_t_x[2], 123.0f, 0.0f, can_t_x, can_t_y + 1.0f, can_t_z, 4.0)) { can_t_x = -2.0f, x_pos = -2.0f, can_t_y = 113.0f, y_pos = 113.0f, min_jump = 113.0f; }
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
 }
 
 GLvoid DrawMap()
 {
-    
-
     // 경로
     // 1층 계단
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 5.0f, 5.0f));
@@ -1285,21 +1318,22 @@ GLvoid DrawPlayer()
 
 GLvoid DrawObsRect()
 {
+    for (int i = 0; i < 3; ++i)
+    {
+        S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
+        T = glm::translate(glm::mat4(1.0f), glm::vec3(block_x[i], block_y[i], 0.0f));
 
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(40.0f, 30.0f + Block_speed, 0.0f));
+        unsigned int path = glGetUniformLocation(s_program[0], "Transform");
+        glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
 
-    unsigned int path = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
+        unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
+        glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
 
-    unsigned int path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
+        glBindVertexArray(vao[0]);
+        glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    }
 
-
-    glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
-
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
+    /*S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 60.0f - Block_speed, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
@@ -1313,7 +1347,7 @@ GLvoid DrawObsRect()
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
     S = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(60.0f, 60.0f - Block_speed, 0.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(55.0f, 60.0f - Block_speed, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
@@ -1323,13 +1357,13 @@ GLvoid DrawObsRect()
 
 
     glBindVertexArray(vao[0]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());*/
 }
 
 GLvoid DrawObsWheel()
 {
     // 2층 장애물
-    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 2.0f));
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(15.0f, 15.0f, 0.0f));
 
@@ -1365,19 +1399,31 @@ GLvoid DrawObsWheel()
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
     // 저어기 위에 톱니바퀴 왔다갔다
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x1, 93.0f, 2.5f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(wheel_t_x[0], 93.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
 
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gold.r, Gold.g, Gold.b);
+    glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
 
     glBindVertexArray(vao[2]);
     glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
 
     Rz = glm::rotate(glm::mat4(1.0f), glm::radians(-wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
-    T = glm::translate(glm::mat4(1.0f), glm::vec3(Wheel_t_x2, 93.0f, -2.5f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(wheel_t_x[1], 108.0f, 0.0f));
+
+    path = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+
+    path_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+
+    glBindVertexArray(vao[2]);
+    glDrawArrays(GL_TRIANGLES, 0, wheel_vertices.size());
+
+    Rz = glm::rotate(glm::mat4(1.0f), glm::radians(wheel_degree), glm::vec3(0.0f, 0.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(wheel_t_x[2], 123.0f, 0.0f));
 
     path = glGetUniformLocation(s_program[0], "Transform");
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
@@ -1436,6 +1482,13 @@ bool coilision(float can_y, float path_y)
     int dis = can_y - path_y;
 
     if (dis <= 0) return true;
+    else return false;
+}
+
+bool coilsion_obs(float x, float y, float z, float can_x, float can_y, float can_z, float dist)
+{
+    float dis = sqrt(pow(can_x - x, 2.0) + pow(can_y - y, 2.0) + pow(can_z - z, 2.0));
+    if (dis <= dist) return true;
     else return false;
 }
 
