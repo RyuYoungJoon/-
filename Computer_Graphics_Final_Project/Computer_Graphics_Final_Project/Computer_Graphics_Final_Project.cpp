@@ -145,6 +145,7 @@ float can_z_rt = 30.0f;
 
 float camera_acceleration = 0.0f;
 float can_rt = 90.0f;
+float can_rotate = 0.0f;
 
 float min_jump = 0.0f;
 float jump_y_vec = 0.3f;
@@ -560,23 +561,23 @@ GLvoid drawScene()
     glm::mat4 LIGHT = glm::mat4(1.0f);
     qobj = gluNewQuadric();
 
-    //if(one_cam)
-    //{
-    //    Camera_xPos = can_t_x + 1.0f;
-    //    Camera_yPos = can_t_y + 3.0f;
-    //    Camera_zPos = can_t_z;
-    //    Camera_xAT = can_t_x + 1.0f + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
-    //    Camera_yAT = can_t_y + 2.0f;
-    //    Camera_zAT = can_t_z + glm::cos(glm::radians(float(camera_rt + 90.0f))) * rad;
+    if(one_cam)
+    {
+        Camera_xPos = can_t_x;
+        Camera_yPos = can_t_y+2.0f;
+        Camera_zPos = can_t_z;
+        Camera_xAT = can_t_x + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
+        Camera_yAT = can_t_y + 2.0f;
+        Camera_zAT = can_t_z + glm::cos(glm::radians(float(camera_rt + 90.0f))) * rad;
 
-    //    glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
-    //    glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
-    //    glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
+        glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
+        glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
+        glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
 
-    //    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
-    //    GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
-    //    glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
-    //}
+        glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
+        GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
+        glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
+    }
     if (thrid_cam)
     {
         Camera_xPos = x_pos;
@@ -760,36 +761,36 @@ void Keyboard(unsigned char key, int x, int y)
 {
     switch (key)
     {
-    //case 'x':
-    //    x_pos -= 2.0f;
-    //    Camera_xAT -= 2.0f;
-    //    break;
-    //case 'X':
-    //    x_pos += 2.0f;
-    //    Camera_xAT += 2.0f;
-    //    break;
-    //case 'y':
-    //    y_pos -= 2.f;
-    //    Camera_yAT -= 2.0f;
-    //    break;
-    //case 'Y':
-    //    y_pos += 2.0f;
-    //    Camera_yAT += 2.0f;
-    //    break;
-    //case 'z':
-    //    z_pos -= 2.0f;
-    //    Camera_zAT -= 2.0f;
-    //    break;
-    //case 'Z':
-    //    z_pos += 2.0f;
-    //    Camera_zAT += 2.0f;
-    //    break;
-    //case 'r':
-    //    degree += 2.0;
-    //    break;
-    //case 'R':
-    //    degree -= 2.0;
-    //    break;
+    case 'x':
+        x_pos -= 2.0f;
+        Camera_xAT -= 2.0f;
+        break;
+    case 'X':
+        x_pos += 2.0f;
+        Camera_xAT += 2.0f;
+        break;
+    case 'y':
+        y_pos -= 2.f;
+        Camera_yAT -= 2.0f;
+        break;
+    case 'Y':
+        y_pos += 2.0f;
+        Camera_yAT += 2.0f;
+        break;
+    case 'z':
+        z_pos -= 2.0f;
+        Camera_zAT -= 2.0f;
+        break;
+    case 'Z':
+        z_pos += 2.0f;
+        Camera_zAT += 2.0f;
+        break;
+    case 'r':
+        degree += 2.0;
+        break;
+    case 'R':
+        degree -= 2.0;
+        break;
     case 'c':
         one_cam = true;
         thrid_cam = false;
@@ -836,8 +837,8 @@ void SpecialKeyboardup(int key, int x, int y)
 
 void Timerfunction(int value)
 {
-    if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25; }
-    if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
+    if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25, can_rotate += 5.0f; }
+    if (rb == true) { can_t_x += 0.25, x_pos += 0.25, can_rotate -= 5.0f; }
 
     if (can_t_x < 0.0f && can_t_y<=13.0f) { can_t_x = 0.0f, x_pos = 0.0f; }
 
@@ -936,9 +937,9 @@ void Timerfunction(int value)
             rollwheel_x[i] += rollvec;
         }
     }
-    light_r -= light_vec;
-    light_g -= light_vec;
-    light_b -= light_vec;
+    //light_r -= light_vec;
+    //light_g -= light_vec;
+    //light_b -= light_vec;
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
@@ -1218,6 +1219,8 @@ GLvoid DrawMap()
 
 GLvoid DrawPlayer()
 {
+    qobj = gluNewQuadric();
+
     S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y, can_t_z));
@@ -1228,6 +1231,23 @@ GLvoid DrawPlayer()
 
     glBindVertexArray(vao[1]);
     glDrawArrays(GL_TRIANGLES, 0, player_vertices.size());
+
+    //Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt - 90.0f)), glm::vec3(0.0, 1.0, 0.0));
+    Rz = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rotate)), glm::vec3(0.0, 0.0, 1.0));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z+1.1f));
+    player = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Rz));
+    player_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(player_Color, Gray.r, Gray.g, Gray.b);
+    gluDisk(qobj, 0.0, 0.73, 20,3);
+
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 2.0f, 1.0f));
+    T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y + 1.0f, can_t_z + 1.15f));
+    player = glGetUniformLocation(s_program[0], "Transform");
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T * Rz * S));
+    player_Color = glGetUniformLocation(s_program[1], "in_Color");
+    glUniform3f(player_Color, Black.r, Black.g, Black.b);
+    gluDisk(qobj, 0.0, 0.2, 20, 3);
 
     if (can_t_x <= -3.f && can_t_y >= 143.f)
         exit(0);
@@ -1269,7 +1289,7 @@ GLvoid DrawObsRect()
     glUniformMatrix4fv(path, 1, GL_FALSE, glm::value_ptr(T * S));
 
     path_Color = glGetUniformLocation(s_program[1], "in_Color");
-    glUniform3f(path_Color, Gray.r, Gray.g, Gray.b);
+    glUniform3f(path_Color, Brown.r, Brown.g, Brown.b);
 
 
     glBindVertexArray(vao[0]);
