@@ -782,8 +782,7 @@ void Keyboard(unsigned char key, int x, int y)
         degree -= 2.0;
         break;
     case 32:
-        jump_button = true;
-        jump_cnt += 1;
+        if(can_t_y<=min_jump)jump_button = true;
         break;
     }
 }
@@ -849,11 +848,11 @@ void Timerfunction(int value)
 
     //if ((can_t_x - 1.0f > rect4[2].x && can_t_x - 1.0f < rect4[2].x+0.01f)&& ( (can_t_y + 1.0f < 15.0f && can_t_y + 1.0f > 13.0f) || (can_t_y - 1.0f < 14.9f && can_t_y - 1.0f > 13.0f) )) { can_t_x = 71.0f, x_pos = 71.0f; }
 
-    if (jump_button && jump_cnt == 1)
+    if (jump_button )
     {
         if (can_t_y <= min_jump + 11.0f)
             can_t_y += jump_y_vec;
-        else jump_button = false, jump_cnt = 0;
+        else jump_button = false;
     }
 
     else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, min_jump = 0.0f; }
