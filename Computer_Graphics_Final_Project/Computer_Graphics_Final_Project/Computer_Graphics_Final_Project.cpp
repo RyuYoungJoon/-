@@ -932,7 +932,8 @@ void Timerfunction(int value)
     }
     if (vicsound == 1)
         PlaySound(L"콜라캔 따고 따르는2 (online-audio-converter.com).wav", 0, SND_FILENAME | SND_ASYNC);
-
+    if (can_t_y >= 300)
+        exit(0);
 
     //Block_speed += block_vec;
     //if (Block_speed >= 28.0f || Block_speed <= 0.0f)
