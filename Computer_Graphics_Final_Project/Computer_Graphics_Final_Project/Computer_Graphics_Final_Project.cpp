@@ -22,7 +22,6 @@
 #include "gtc/matrix_transform.hpp"
 //#include "myMap.h"
 #include "ReadObj.h"
-#include "Sound.h"
 #pragma comment(lib,"winmm.lib")
 
 #define WIDTH 1500
@@ -59,7 +58,7 @@ uniform_real_distribution<> random_pos_urd{ -20.0,20.0 };
 
 float random_xpos = random_pos_urd(dre);
 float random_zpos = random_pos_urd(dre);
-SOUND Sound;
+
 // 유영준 맵 작업용 카메라 좌표
 
 //float Camera_xPos = 0.0f;
@@ -86,8 +85,8 @@ float Camera_xAT = 0.0f;
 float Camera_yAT = 0.0f;
 float Camera_zAT = 0.0f;
 
-float x_pos = 10.0f;
-float y_pos = 60.0f;
+float x_pos = 0.0f;
+float y_pos = 0.0f;
 float z_pos = 20.0f;
 
 bool one_cam = false;
@@ -133,8 +132,8 @@ float block_y[3] = { 58.0f,33.0f,48.0f };
 float block_vec[3] = { 0.3f,0.5f,0.2f };
 
 // 캔 trans 좌표 변수
-float can_t_x = 10.0f;
-float can_t_y = 60.0f;
+float can_t_x = 0.0f;
+float can_t_y = 0.0f;
 float can_t_z = 0.0f;
 float acceleration = 0.0f;
 
@@ -180,7 +179,7 @@ bool sound = true;
 
 int bgsound = 0;
 int vicsound = 0;
-
+int oversound = 0;
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 Blue = glm::vec3(0.0f, 0.0f, 1.0f);
@@ -932,7 +931,7 @@ void Timerfunction(int value)
         vicsound += 1;
     }
     if (vicsound == 1)
-        Sound.PlayerVictory();
+        PlaySound(L"콜라캔 따고 따르는2 (online-audio-converter.com).wav", 0, SND_FILENAME | SND_ASYNC);
 
 
     //Block_speed += block_vec;
@@ -980,9 +979,22 @@ void Timerfunction(int value)
             rollwheel_x[i] += rollvec;
         }
     }
-    //light_r -= light_vec;
-    //light_g -= light_vec;
-    //light_b -= light_vec;
+    light_r -= light_vec;
+    light_g -= light_vec;
+    light_b -= light_vec;
+
+    if (light_r <= 0.12)
+    {
+        oversound += 1;
+
+    }
+    if (oversound == 1)
+    {
+        PlaySound(L"y2mate.com - 어몽어스 사보타지 (효과음) (online-audio-converter.com).wav", 0, SND_FILENAME | SND_ASYNC );
+    }
+
+
+
 
     //cout << light_r << endl;
 
