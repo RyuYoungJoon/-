@@ -85,7 +85,7 @@ float Camera_zAT = 0.0f;
 
 float x_pos = 0.0f;
 float y_pos = 0.0f;
-float z_pos = 10.0f;
+float z_pos = 20.0f;
 
 bool one_cam = false;
 bool thrid_cam = true;
@@ -144,10 +144,10 @@ float can_y_rt = 10.0f;
 float can_z_rt = 30.0f;
 
 float camera_acceleration = 0.0f;
-float can_rt = 0.0f;
+float can_rt = 90.0f;
 
 float min_jump = 0.0f;
-float jump_y_vec = 0.4f;
+float jump_y_vec = 0.3f;
 
 // 마우스 불 변수
 bool mouse_botton;
@@ -463,7 +463,7 @@ bb can_bb[] =
 
 bool coilision(float, float);
 
-GLuint vao[24], vbo[26];
+GLuint vao[7], vbo[7];
 
 std::vector< glm::vec3 > cube_vertices;
 std::vector< glm::vec2 > cube_uvs;
@@ -482,7 +482,7 @@ std::vector< glm::vec2 > wheel_uvs;
 std::vector< glm::vec3 > wheel_normals;
 
 bool res_cube = loadOBJ("cube.obj", cube_vertices, cube_uvs, cube_normals);
-bool res_player = loadOBJ("player.obj", player_vertices, player_uvs, player_normals);
+bool res_player = loadOBJ("can.obj", player_vertices, player_uvs, player_normals);
 bool res_pyramid = loadOBJ("pyramid.obj", pyramid_vertices, pyramid_uvs, pyramid_normals);
 bool res_wheel = loadOBJ("top.obj", wheel_vertices, wheel_uvs, wheel_normals);
 
@@ -560,29 +560,28 @@ GLvoid drawScene()
     glm::mat4 LIGHT = glm::mat4(1.0f);
     qobj = gluNewQuadric();
 
-    if(one_cam)
-    {
-        Camera_xPos = can_t_x + 1.0f;
-        Camera_yPos = can_t_y + 3.0f;
-        Camera_zPos = can_t_z;
-        Camera_xAT = can_t_x + 1.0f + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
-        Camera_yAT = can_t_y + 2.0f;
-        Camera_zAT = can_t_z + glm::cos(glm::radians(float(camera_rt + 90.0f))) * rad;
+    //if(one_cam)
+    //{
+    //    Camera_xPos = can_t_x + 1.0f;
+    //    Camera_yPos = can_t_y + 3.0f;
+    //    Camera_zPos = can_t_z;
+    //    Camera_xAT = can_t_x + 1.0f + glm::sin(glm::radians(float(camera_rt + 90.0f))) * rad;
+    //    Camera_yAT = can_t_y + 2.0f;
+    //    Camera_zAT = can_t_z + glm::cos(glm::radians(float(camera_rt + 90.0f))) * rad;
 
-        glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
-        glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
-        glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
+    //    glm::vec3 camerapos = glm::vec3(Camera_xPos, Camera_yPos, Camera_zPos); //EYE
+    //    glm::vec3 cameradirection = glm::vec3(Camera_xAT, Camera_yAT, Camera_zAT); // AT
+    //    glm::vec3 cameraup = glm::vec3(0.0f, 1.0f, 0.0f); // UP
 
-        glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
-        GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
-        glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
-    }
-
+    //    glm::mat4 view = glm::lookAt(camerapos, cameradirection, cameraup);
+    //    GLuint viewlocation = glGetUniformLocation(s_program[0], "View");
+    //    glUniformMatrix4fv(viewlocation, 1, GL_FALSE, value_ptr(view));
+    //}
     if (thrid_cam)
     {
         Camera_xPos = x_pos;
         Camera_yPos = y_pos + 10.0f;
-        Camera_zPos = 30.0f;
+        Camera_zPos = z_pos;
         Camera_xAT = x_pos;
         Camera_yAT = y_pos;
         Camera_zAT = 0.0f;
@@ -623,7 +622,7 @@ GLvoid drawScene()
     DrawObsWheel();
 
     unsigned int Alpha = glGetUniformLocation(s_program[2], "Alpha");
-    glUniform1f(Alpha, 0.5f);
+    glUniform1f(Alpha, 0.7f);
     DrawMap();
 
     glutSwapBuffers();
@@ -676,8 +675,8 @@ void make_fragmentshader()
 
 void InitBuffer()
 {
-    glGenVertexArrays(24, vao);
-    glGenBuffers(26, vbo);
+    glGenVertexArrays(6, vao);
+    glGenBuffers(6, vbo);
 
     // 육면체
     glBindVertexArray(vao[0]);
@@ -868,42 +867,42 @@ void Timerfunction(int value)
 
     if (jump_button)
     {
-        if (can_t_y <= min_jump + 11.0f)
+        if (can_t_y <= min_jump + 10.0f)
             can_t_y += jump_y_vec, y_pos += 0.3f;
         else jump_button = false;
     }
 
-    else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, min_jump = 0.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect_1wall[0].y)) { can_t_y = 8.0f, min_jump = 8.0f, camera_rt = 180.0f; }
+    else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, y_pos = 0.0f, min_jump = 0.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect_1wall[0].y)) { can_t_y = 8.0f, y_pos = 8.0f, min_jump = 8.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, min_jump = 15.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect_2wall[0].y)) { can_t_y = 23.0f, min_jump = 23.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, y_pos = 15.0f, min_jump = 15.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect_2wall[0].y)) { can_t_y = 23.0f, y_pos = 23.0f, min_jump = 23.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 30.0f && coilision(can_t_y, rect_3floor[0].y)) { can_t_y = 30.0f, min_jump = 30.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 38.0f && coilision(can_t_y, rect_3wall[0].y)) { can_t_y = 38.0f, min_jump = 38.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 30.0f && coilision(can_t_y, rect_3floor[0].y)) { can_t_y = 30.0f, y_pos = 30.0f, min_jump = 30.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 38.0f && coilision(can_t_y, rect_3wall[0].y)) { can_t_y = 38.0f, y_pos = 38.0f, min_jump = 38.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 45.0f && coilision(can_t_y, rect_4floor[0].y)) { can_t_y = 45.0f, min_jump = 45.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 53.0f && coilision(can_t_y, rect_4wall[0].y)) { can_t_y = 53.0f, min_jump = 53.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 45.0f && coilision(can_t_y, rect_4floor[0].y)) { can_t_y = 45.0f, y_pos = 45.0f, min_jump = 45.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 53.0f && coilision(can_t_y, rect_4wall[0].y)) { can_t_y = 53.0f, y_pos = 53.0f, min_jump = 53.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 60.0f && coilision(can_t_y, rect_5floor[0].y)) { can_t_y = 60.0f, min_jump = 60.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 68.0f && coilision(can_t_y, rect_5wall[0].y)) { can_t_y = 68.0f, min_jump = 68.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 60.0f && coilision(can_t_y, rect_5floor[0].y)) { can_t_y = 60.0f, y_pos = 60.0f, min_jump = 60.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 68.0f && coilision(can_t_y, rect_5wall[0].y)) { can_t_y = 68.0f, y_pos = 68.0f, min_jump = 68.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 75.0f && coilision(can_t_y, rect_6floor[0].y)) { can_t_y = 75.0f, min_jump = 75.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 83.0f && coilision(can_t_y, rect_6wall[0].y)) { can_t_y = 83.0f, min_jump = 83.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 75.0f && coilision(can_t_y, rect_6floor[0].y)) { can_t_y = 75.0f, y_pos = 75.0f, min_jump = 75.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 83.0f && coilision(can_t_y, rect_6wall[0].y)) { can_t_y = 83.0f, y_pos = 83.0f, min_jump = 83.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 90.0f && coilision(can_t_y, rect_7floor[0].y)) { can_t_y = 90.0f, min_jump = 90.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 98.0f && coilision(can_t_y, rect_7wall[0].y)) { can_t_y = 98.0f, min_jump = 98.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 90.0f && coilision(can_t_y, rect_7floor[0].y)) { can_t_y = 90.0f, y_pos = 90.0f, min_jump = 90.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 98.0f && coilision(can_t_y, rect_7wall[0].y)) { can_t_y = 98.0f, y_pos = 98.0f, min_jump = 98.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 105.0f && coilision(can_t_y, rect_8floor[0].y)) { can_t_y = 105.0f, min_jump = 105.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 113.0f && coilision(can_t_y, rect_8wall[0].y)) { can_t_y = 113.0f, min_jump = 113.0f, camera_rt = 0.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 105.0f && coilision(can_t_y, rect_8floor[0].y)) { can_t_y = 105.0f, y_pos = 105.0f, min_jump = 105.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 113.0f && coilision(can_t_y, rect_8wall[0].y)) { can_t_y = 113.0f, y_pos = 113.0f, min_jump = 113.0f, camera_rt = 0.0f; }
 
-    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 120.0f && coilision(can_t_y, rect_9floor[0].y)) { can_t_y = 120.0f, min_jump = 120.0f, camera_rt = 0.0f; }
-    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 128.0f && coilision(can_t_y, rect_9wall[0].y)) { can_t_y = 128.0f, min_jump = 128.0f, camera_rt = 180.0f; }
+    else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 120.0f && coilision(can_t_y, rect_9floor[0].y)) { can_t_y = 120.0f, y_pos = 120.0f, min_jump = 120.0f, camera_rt = 0.0f; }
+    else if (can_t_x > 80.0f && can_t_x < 84.0f && can_t_y >= 128.0f && coilision(can_t_y, rect_9wall[0].y)) { can_t_y = 128.0f, y_pos = 128.0f, min_jump = 128.0f, camera_rt = 180.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 135.0f && coilision(can_t_y, rect_10floor[0].y)) { can_t_y = 135.0f, min_jump = 135.0f, camera_rt = 180.0f; }
-    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) { can_t_y = 143.0f, min_jump = 143.0f, one_cam = false, thrid_cam = true; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 135.0f && coilision(can_t_y, rect_10floor[0].y)) { can_t_y = 135.0f, y_pos = 135.0f, min_jump = 135.0f, camera_rt = 180.0f; }
+    else if (can_t_x > -4.0f && can_t_x < 0.0f && can_t_y >= 143.0f && coilision(can_t_y, rect_10wall[0].y)) { can_t_y = 143.0f, y_pos = 143.0f, min_jump = 143.0f, one_cam = false, thrid_cam = true; }
 
-    else can_t_y -= 0.4f, y_pos -= 0.3f;
+    else can_t_y -= 0.3f, y_pos -= 0.3f;
 
     Block_speed += block_vec;
     if (Block_speed >= 28.0f || Block_speed <= 0.0f)
@@ -1219,15 +1218,16 @@ GLvoid DrawMap()
 
 GLvoid DrawPlayer()
 {
+    S = glm::scale(glm::mat4(1.0f), glm::vec3(1.0f, 1.0f, 1.0f));
     Ry = glm::rotate(glm::mat4(1.0f), float(glm::radians(can_rt)), glm::vec3(0.0, 1.0, 0.0));
     T = glm::translate(glm::mat4(1.0f), glm::vec3(can_t_x, can_t_y, can_t_z));
     unsigned int player = glGetUniformLocation(s_program[0], "Transform");
-    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T));
+    glUniformMatrix4fv(player, 1, GL_FALSE, glm::value_ptr(T*Ry*S));
     unsigned int player_Color = glGetUniformLocation(s_program[1], "in_Color");
     glUniform3f(player_Color, Red.r, Red.g, Red.b);
 
     glBindVertexArray(vao[1]);
-    glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
+    glDrawArrays(GL_TRIANGLES, 0, player_vertices.size());
 
     if (can_t_x <= -3.f && can_t_y >= 143.f)
         exit(0);
