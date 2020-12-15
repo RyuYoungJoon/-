@@ -169,6 +169,7 @@ float rollwheel_y[10]{ 0, };
 float rollwheel_degree[10]{ 0, };
 float rollwheel_degree_vec = 3.5f;
 bool wheel_roll[10] = { true, false, false, false, false, false, false, false, false, false };
+bool sound = true;
 
 glm::vec3 Red = glm::vec3(1.0f, 0.0f, 0.0f);
 glm::vec3 Green = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -524,7 +525,10 @@ void main(int argc, char** argv)
     glutInitWindowPosition(100, 100);
     glutInitWindowSize(WIDTH, HEIGHT);
     glutCreateWindow("Example1");
-    //PlaySound(L"¸Êºê±Ý.wav", 0, SND_FILENAME | SND_ASYNC);
+    if (sound)
+        PlaySound(L"¸Êºê±Ý.wav", 0, SND_FILENAME | SND_ASYNC);
+    else
+        PlaySound(L"¿£µù1.wav", 0, SND_FILENAME | SND_ASYNC);
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK)
     {
@@ -558,6 +562,7 @@ void main(int argc, char** argv)
 
 GLvoid drawScene()
 {
+    
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -566,7 +571,7 @@ GLvoid drawScene()
     glUseProgram(s_program[2]);
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
+    
     qobj = gluNewQuadric();
 
     Camera_xPos = x_pos + glm::cos(glm::radians(float(degree))) * rad;
@@ -819,6 +824,8 @@ void SpecialKeyboardup(int key, int x, int y)
 
 void Timerfunction(int value)
 {
+    
+    
     if (lb == true) { can_t_x -= 0.25, x_pos -= 0.25; }
     if (rb == true) { can_t_x += 0.25, x_pos += 0.25; }
 
@@ -858,7 +865,7 @@ void Timerfunction(int value)
     else if (coilision(can_t_y, rect_1floor[0].y)) { can_t_y = 0.0f, min_jump = 0.0f; }
     else if (can_t_x > 80.0f && can_t_x < 84.0f && coilision(can_t_y, rect_1wall[0].y)) { can_t_y = 8.0f, min_jump = 8.0f; }
 
-    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, min_jump = 15.0f; }
+    else if (can_t_x < 71.0f && can_t_x > 0.0f && can_t_y >= 15.0f && coilision(can_t_y, rect_2floor[0].y)) { can_t_y = 15.0f, min_jump = 15.0f;}
     else if (can_t_x > -4.0f && can_t_x < 0.1f && can_t_y >= 23.0f && coilision(can_t_y, rect_2wall[0].y)) { can_t_y = 23.0f, min_jump = 23.0f; }
 
     else if (can_t_x > 9.0f && can_t_x < 80.0f && can_t_y >= 30.0f && coilision(can_t_y, rect_3floor[0].y)) { can_t_y = 30.0f, min_jump = 30.0f; }
@@ -922,6 +929,12 @@ void Timerfunction(int value)
     light_r -= light_vec;
     light_g -= light_vec;
     light_b -= light_vec;
+
+    if (can_t_x <= -3.f && can_t_y >= 143.f) { 
+        sound = false;
+        can_t_y += 1.0f;
+        
+    }
 
     glutTimerFunc(10, Timerfunction, 1);
     glutPostRedisplay();
@@ -1211,8 +1224,7 @@ GLvoid DrawPlayer()
     glBindVertexArray(vao[1]);
     glDrawArrays(GL_TRIANGLES, 0, cube_vertices.size());
 
-    if (can_t_x <= -3.f && can_t_y >= 143.f)
-        exit(0);
+    
 }
 
 GLvoid DrawObsRect()
