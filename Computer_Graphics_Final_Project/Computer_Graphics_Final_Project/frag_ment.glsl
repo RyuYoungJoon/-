@@ -12,7 +12,7 @@ in vec3 Normal;
 uniform int flag;
 
 uniform float Alpha; 
-out vec4 gl_FragColor;
+out vec4 FragColor;
 
 void main()
 {
@@ -33,7 +33,7 @@ void main()
     vec3 specular = specularLight * lightColor; //--- 거울 반사 조명값: 거울반사값 * 조명색상값
     
     vec3 result = (ambient + diffuse + specular) * ex_Color; //--- 최종 조명 설정된 픽셀 색상: (주변+산란반사+거울반사조명)*객체 색상
-	gl_FragColor = vec4(result,Alpha);
-	if(flag==1) gl_FragColor = vec4(ex_Color,Alpha);
+	FragColor = vec4(result,Alpha);
+	if(flag==1) FragColor = vec4(ex_Color,Alpha);
 	
 }
